@@ -6,6 +6,12 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "classnames": "^2.2.6",
+    "less": "^3.12.2",
+    "nav-frontend-core": "^5.0.1",
+    "nav-frontend-typografi": "^2.0.26",
+    "nav-frontend-typografi-style": "^1.0.22",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3"
