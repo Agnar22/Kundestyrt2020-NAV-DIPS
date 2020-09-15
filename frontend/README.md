@@ -11,10 +11,11 @@ Start the app in development mode:
 ## Build and run project with docker
 
 From frontend folder:
-`<docker build -t frontend:dev .>`
-`<docker run -it -v ${PWD}:/app \
-    -v /app/node_modules \
-    -p 3001:3000 \
-    -e CHOKIDAR_USEPOLLING=true \
-    sample:dev>`
 
+`docker build -t frontend:dev .`
+
+Run image as container:
+
+`docker run -it -v ${PWD}:/app -v /app/node_modules -p 3001:3000 -e CHOKIDAR_USEPOLLING=true frontend:dev`
+
+The application is now available from the docker default ip on port 3001.
