@@ -1,15 +1,8 @@
-/* Det står ingenting om import på nettsidene, men prøvde import-statementet under */
-/* @import 'nav-frontend-typografi-style';  */
-
 .App {
   text-align: center;
-  .typo-normal-mixin();
-  color: @navMorkGra;
-  font-family: @font-family;
-  line-height: @line-height-base;
 }
 
 
 .App-title{
-  color: black;
+  color: #ff00ff;
 }
