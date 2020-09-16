@@ -1,0 +1,21 @@
+name: CI
+
+on:
+    push
+
+jobs:
+    build:
+
+        runs-on: ubuntu-latest
+        
+        strategy:
+            matrix:
+                os: [ubuntu-lates, windows-2016]
+                node-verison: [12.x, 14.x]
+
+        steps:
+        -   uses: actions/checkout@v2
+        -   name: npm install and build
+            run: |
+                npm install
+                npm run build
