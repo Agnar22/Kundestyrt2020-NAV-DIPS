@@ -7,7 +7,6 @@ function App() {
       <h1 className="App-title">
         Søknad om pleiepenger
       </h1>
-
     </div>
   );
 }
