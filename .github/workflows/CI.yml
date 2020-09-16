@@ -35,9 +35,11 @@ jobs:
             uses: actions/setup-node@v1
             with:
                 node-version: ${{ matrix.node-version }}
+            working-directory: ./frontend
         -   name: npm install, and test
             run: |
                 npm install
                 npm test
+            working-directory: ./frontend
             env:
                 CI: true
