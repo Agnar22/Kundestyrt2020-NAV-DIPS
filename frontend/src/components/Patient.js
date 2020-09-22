@@ -2,7 +2,6 @@ import React from "react";
 import { FhirClientContext } from "../FhirClientContext";
 
 function PatientName({ name = [] }) {
-    console.log(name);
     let entry =
         name.find(nameRecord => nameRecord.use === "official") || name[0];
     if (!entry) {
@@ -44,11 +43,9 @@ export default class Patient extends React.Component {
     }
     async componentDidMount() {
         const client = this.context.client;
-        console.log(client);
         this._loader = await client.patient
             .read()
             .then(patient => {
-                console.log(patient);
                 this.setState({ patient: patient, loading: false, error: null });
             })
             .catch(error => {
