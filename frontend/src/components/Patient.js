@@ -5,7 +5,7 @@ function PatientName({ name = [] }) {
     let entry =
         name.find(nameRecord => nameRecord.use === "official") || name[0];
     if (!entry) {
-        return <h1>No Name</h1>;
+        return <h1>Navn ikke funnet</h1>;
     }
     return <h1>{entry.given.join(" ") + " " + entry.family}</h1>;
 }
@@ -14,9 +14,9 @@ function PatientSocialSecurityNumber({ identifier = [] }) {
     let socialSecurityNumber = 
         identifier.find(sb => sb.system === "http://hl7.org/fhir/sid/us-ssn").value;
     if (!socialSecurityNumber){
-        return <p>No social sec nr</p>
+        return <p>Personnr. ikke funnet</p>
     }
-    return <p>Social security number: <b>{socialSecurityNumber}</b></p>
+    return <p>Personnr.: <b>{socialSecurityNumber}</b></p>
 }
 
 function PatientBanner(patient) {
@@ -25,7 +25,7 @@ function PatientBanner(patient) {
             <PatientName name={patient.name} />
             <PatientSocialSecurityNumber identifier={patient.identifier}/>
             <p>
-                Date of birth: <b>{patient.birthDate}</b>
+                Fødselsdato: <b>{patient.birthDate}</b>
             </p>
         </div>
     );
@@ -56,7 +56,7 @@ export default class Patient extends React.Component {
     render() {
         const { error, loading, patient } = this.state;
         if (loading) {
-            return null;
+            return <p>HER LASTER DET</p>;
         }
         if (error) {
             return error.message;
