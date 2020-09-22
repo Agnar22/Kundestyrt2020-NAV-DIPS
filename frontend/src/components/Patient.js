@@ -17,7 +17,7 @@ function PatientSocialSecurityNumber({ identifier = [] }) {
     if (!socialSecurityNumber){
         return <p>Personnr. ikke funnet</p>
     }
-    return <p>Personnr.: <b>{socialSecurityNumber}</b></p>
+    return <p>Fødselsnr.: <b>{socialSecurityNumber}</b></p>
 }
 
 function PatientBanner(patient) {
