@@ -1,6 +1,6 @@
 # Kundestyrt2020-NAV-DIPS
 
-<<<<<<< HEAD
+
 ## Sandbox environment
 
 ### Setup
@@ -26,7 +26,7 @@ Follow the [Getting Started Guide](./frontend/README.md) in the frontend-readme 
 While the sandbox environment is hosted in a local docker-container, go to <http://192.168.99.100:4013> 
 
 Make sure that the FHIR api version is set to R3(STU3), enter the url for the frontend application in the url field (<http://192.168.99.100:3001>) and click launch. 
-=======
+
 # Backend
 At the moment, the backend is limited to receiving a GET request on [localhost:8081/testing](http://localhost:8081/testing) and then putting a message ("testmessage") on a kafka topic ("TestTopic"). The KafkaAdmin and TopicBuilder in Kafka.kt is to ensure that the selected topics exists, otherwise it is created.
 
