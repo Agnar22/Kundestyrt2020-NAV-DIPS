@@ -1,5 +1,6 @@
 import React from "react";
 import { oauth2 as SMART } from "fhirclient";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default class Launcher extends React.Component {
     /**
@@ -22,6 +23,6 @@ export default class Launcher extends React.Component {
     }
     
     render() {
-        return "Launching...";
+        return <CircularProgress />
     }
 }
