@@ -1,5 +1,6 @@
 import React from "react";
 import { FhirClientContext } from "../FhirClientContext";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 function PatientName({ name = [] }) {
     let entry =
@@ -46,7 +47,7 @@ export default class Patient extends React.Component {
         this._loader = await client.patient
             .read()
             .then(patient => {
-                this.setState({ patient: patient, loading: false, error: null });
+                this.setState({ patient: patient, loading: false, error: false });
             })
             .catch(error => {
                 this.setState({ error, loading: false });
@@ -56,10 +57,10 @@ export default class Patient extends React.Component {
     render() {
         const { error, loading, patient } = this.state;
         if (loading) {
-            return <p>HER LASTER DET</p>;
+            return <CircularProgress />
         }
         if (error) {
-            return error.message;
+            return <p>{error.message}</p>;
         }
         return <PatientBanner {...patient} />;
     }
