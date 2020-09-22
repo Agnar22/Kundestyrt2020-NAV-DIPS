@@ -1,6 +1,5 @@
 # Kundestyrt2020-NAV-DIPS
 
-
 ## Sandbox environment
 
 ### Setup
@@ -41,4 +40,3 @@ To run the backend, one has to setup Kafka, as we have not yet set up a remote s
 ### Installation guides
  - Windows: [Video by Daily Code Buffer](https://www.youtube.com/watch?v=EUzH9khPYgs)
  - Ubuntu 18.04: [Tutorial by DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-install-apache-kafka-on-ubuntu-18-04) 
->>>>>>> 1b33b10d0326859717091a93f36bb5a7584c9ce1
