@@ -2,7 +2,6 @@ import React from "react";
 import { FhirClientContext } from "../FhirClientContext";
 
 function PatientName({ name = [] }) {
-    console.log('hhhhhhhhhhhhhhhh');
     console.log(name);
     let entry =
         name.find(nameRecord => nameRecord.use === "official") || name[0];
@@ -12,16 +11,23 @@ function PatientName({ name = [] }) {
     return <h1>{entry.given.join(" ") + " " + entry.family}</h1>;
 }
 
+function PatientSocialSecurityNumber({ identifier = [] }) {
+    let socialSecurityNumber = 
+        identifier.find(sb => sb.system === "http://hl7.org/fhir/sid/us-ssn").value;
+    if (!socialSecurityNumber){
+        return <p>No social sec nr</p>
+    }
+    return <p>Social security number: <b>{socialSecurityNumber}</b></p>
+}
+
 function PatientBanner(patient) {
     return (
         <div>
             <PatientName name={patient.name} />
-            <span>
-                Gender: <b>{patient.gender}</b>,{" "}
-            </span>
-            <span>
-                DOB: <b>{patient.birthDate}</b>
-            </span>
+            <PatientSocialSecurityNumber identifier={patient.identifier}/>
+            <p>
+                Date of birth: <b>{patient.birthDate}</b>
+            </p>
         </div>
     );
 }
@@ -38,13 +44,16 @@ export default class Patient extends React.Component {
     }
     async componentDidMount() {
         const client = this.context.client;
-        this._loader = await client.request('Patient/ab9600db-1ab6-48c0-862a-8f88e46e5fcd')
+        console.log(client);
+        this._loader = await client.patient
+            .read()
             .then(patient => {
+                console.log(patient);
                 this.setState({ patient: patient, loading: false, error: null });
             })
             .catch(error => {
                 this.setState({ error, loading: false });
-            })
+            })  
     }
 
     render() {
