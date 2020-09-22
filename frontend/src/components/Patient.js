@@ -15,7 +15,7 @@ function PatientSocialSecurityNumber({ identifier = [] }) {
     let socialSecurityNumber = 
         identifier.find(sb => sb.system === "http://hl7.org/fhir/sid/us-ssn").value;
     if (!socialSecurityNumber){
-        return <p>Personnr. ikke funnet</p>
+        return <p>Fødelsnummer ikke funnet</p>
     }
     return <p>Fødselsnr.: <b>{socialSecurityNumber}</b></p>
 }
