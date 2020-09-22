@@ -1,5 +1,6 @@
 package com.ntnu.backend.controller
 
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.http.HttpStatus
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.web.bind.annotation.GetMapping
@@ -8,14 +9,14 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-class KafkaController(val kafkaTemplate: KafkaTemplate<String, String>) {
+class KafkaController(val kafkaTemplate: KafkaTemplate<String, String>, val properties: KafkaProperties) {
 
-    val TOPIC = "TestTopic";
+    val topic: String = properties.template.defaultTopic
 
     @GetMapping("/testing")
     @ResponseStatus(HttpStatus.OK)
     fun publishMessage(): String {
-        kafkaTemplate.send(TOPIC, "testmessage");
+        kafkaTemplate.send(topic, "testmessage");
         return "Published successfully";
     }
 }
