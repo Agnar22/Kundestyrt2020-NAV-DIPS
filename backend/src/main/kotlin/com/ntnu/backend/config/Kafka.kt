@@ -51,9 +51,9 @@ class Kafka(properties: KafkaProperties) {
 
     @Bean
     fun consumer(): KafkaConsumer<String, String> {
-        val kafkaconsumer = KafkaConsumer<String, String>(kafkaConfig)
-        kafkaconsumer.subscribe(listOf(topic))
-        return kafkaconsumer
+        val kafkaConsumer = KafkaConsumer<String, String>(kafkaConfig)
+        kafkaConsumer.subscribe(listOf(topic))
+        return kafkaConsumer
     }
 
     @Bean
