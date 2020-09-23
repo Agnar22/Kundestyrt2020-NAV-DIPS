@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-class KafkaController(val kafkaTemplate: KafkaTemplate<String, String>, val properties: KafkaProperties) {
+class KafkaController(val kafkaTemplate: KafkaTemplate<String, String>, properties: KafkaProperties) {
 
     val topic: String = properties.template.defaultTopic
 
