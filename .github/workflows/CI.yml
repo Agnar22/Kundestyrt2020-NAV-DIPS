@@ -16,9 +16,16 @@ jobs:
 
         steps:
         -   uses: actions/checkout@v2
+        -   name: Cache node modules
+            uses: actions/cache@v1
+            with:
+                path: ~/.npm
+                key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                 restore-keys: |
+                    ${{ runner.os }}-node-
         -   name: npm install and build
             run: |
-                npm install
+                npm ci
                 npm run build
             working-directory: ./frontend
         -   name: setup JDK 1.11
