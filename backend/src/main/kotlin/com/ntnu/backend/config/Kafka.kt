@@ -18,16 +18,20 @@ class Kafka(properties: KafkaProperties) {
 
     private val topic: String = properties.template.defaultTopic
     private val hosts: MutableList<String> = properties.bootstrapServers
+    private val trustStoreLocation: String = properties.ssl.trustStoreLocation.filename!!
+    private val trustStorePassword: String = properties.ssl.trustStorePassword
+    private val keyStoreLocation: String = properties.ssl.keyStoreLocation.filename!!
+    private val keyStorePassword: String = properties.ssl.keyStorePassword
     private val kafkaConfig : HashMap<String, Any> = hashMapOf(
             "bootstrap.servers" to hosts,
             "group.id" to "test_group",
             "security.protocol" to "SSL",
             "enable.auto.commit" to "true",
-            "ssl.truststore.location" to "client.truststore.jks",
-            "ssl.truststore.password" to System.getenv("CLIENT_TRUSTSTORE_PASSWORD"),
+            "ssl.truststore.location" to trustStoreLocation,
+            "ssl.truststore.password" to trustStorePassword,
             "ssl.keystore.type" to "PKCS12",
-            "ssl.keystore.location" to "client.keystore.p12",
-            "ssl.keystore.password" to System.getenv("CLIENT_KEYSTORE_PASSWORD"),
+            "ssl.keystore.location" to keyStoreLocation,
+            "ssl.keystore.password" to keyStorePassword,
             "key.serializer" to StringSerializer::class.java,
             "key.deserializer" to StringDeserializer::class.java,
             "value.serializer" to StringSerializer::class.java,
