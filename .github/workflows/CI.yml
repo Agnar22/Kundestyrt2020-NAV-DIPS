@@ -34,6 +34,7 @@ jobs:
                 java-version: 1.11
                 
         -  name: restore key- and truststore
+           working-directory: ./backend
            run: |
                 echo "${{ secrets.CLIENT_KEYSTORE }}" > client.keystore.p12.asc
                 gpg -d --passphrase "${{ secrets.CLIENT_KEYSTORE_KEY }}" --batch client.keystore.p12.asc > client.keystore.p12
@@ -41,6 +42,8 @@ jobs:
                 echo "${{ secrets.CLIENT_TRUSTSTORE }}" > client.truststore.jks.asc
                 gpg -d --passphrase "${{ secrets.CLIENT_TRUSTSTORE_KEY }}" --batch client.truststore.jks.asc > client.truststore.jks
                 echo "Successfully created truststore."
+            
+            
                 
                 
 
