@@ -51,7 +51,9 @@ jobs:
             run: |
                 mvn -B --no-transfer-progress package --file pom.xml
             env:
+                CLIENT_TRUSTSTORE_LOCATION : client.truststore.jks
                 CLIENT_TRUSTSTORE_PASSWORD : ${{ secrets.CLIENT_TRUSTSTORE_PASSWORD }}
+                CLIENT_KEYSTORE_LOCATION : client.keystore.p12
                 CLIENT_KEYSTORE_PASSWORD : ${{ secrets.CLIENT_KEYSTORE_PASSWORD }}
             working-directory: ./backend
 
