@@ -2,6 +2,8 @@
 
 ## Run the project locally
 
+From the frontend folder:
+
 Install all necessary dependencies:
 ### `npm install`
 
