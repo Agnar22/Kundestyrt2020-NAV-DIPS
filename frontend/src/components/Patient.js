@@ -1,6 +1,6 @@
 import React from "react";
 import { FhirClientContext } from "../FhirClientContext";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Textarea } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
 
@@ -73,7 +73,7 @@ export default class Patient extends React.Component {
     render() {
         const { error, loading, patient } = this.state;
         if (loading) {
-            return <CircularProgress />
+            return <NavFrontendSpinner />
         }
         if (error) {
             return <p>{error.message}</p>;
