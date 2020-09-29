@@ -1,6 +1,7 @@
 import React from "react";
 import { FhirClientContext } from "../FhirClientContext";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import PatientForm from "./PatientForm";
 
 function PatientName({ name = [] }) {
     let entry =
@@ -20,6 +21,7 @@ function PatientSocialSecurityNumber({ identifier = [] }) {
     return <p>Fødselsnummer: <b>{socialSecurityNumber}</b></p>
 }
 
+
 function PatientBanner(patient) {
     return (
         <div>
@@ -28,6 +30,10 @@ function PatientBanner(patient) {
             <p>
                 Fødselsdato: <b>{patient.birthDate}</b>
             </p>
+            <form onSubmit={patient.handleSubmit}>
+                <textarea  defaultValue={patient.value} onChange={patient.handleOnTextAreaChange}/>
+                <button type="submit"> Send </button>
+            </form>
         </div>
     );
 }
@@ -39,6 +45,7 @@ export default class Patient extends React.Component {
         this.state = {
             loading: true,
             patient: null,
+            value:"",
             error: null
         };
     }
@@ -54,6 +61,16 @@ export default class Patient extends React.Component {
             })  
     }
 
+    handleOnTextAreaChange(e) {
+        this.setState({value:e.target.value})
+        console.log("Logloglog")
+    }
+
+    handleSubmit(e){
+        e.preventDefault()
+        console.log("har trykket på submit")
+    }
+
     render() {
         const { error, loading, patient } = this.state;
         if (loading) {
@@ -62,6 +79,11 @@ export default class Patient extends React.Component {
         if (error) {
             return <p>{error.message}</p>;
         }
-        return <PatientBanner {...patient} />;
+
+        return(
+        <div>
+            <PatientBanner {...patient} handleTextAreaChange={e => this.handleOnTextAreaChange(e)} handleSubmit={e => this.handleSubmit(e)} value={this.state.value}/>
+        </div>
+        );
     }
 }
