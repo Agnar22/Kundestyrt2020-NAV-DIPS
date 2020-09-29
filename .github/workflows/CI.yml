@@ -36,8 +36,11 @@ jobs:
         -  name: restore key- and truststore
            run: |
                 echo "${{ secrets.CLIENT_KEYSTORE }}" > client.keystore.p12.asc
-                gpg -d --passphrase "{{ secrets.CLIENT_KEYSTORE_KEY }}" --batch client.keystore.p12.asc > client.keystore.p12
+                gpg -d --passphrase "${{ secrets.CLIENT_KEYSTORE_KEY }}" --batch client.keystore.p12.asc > client.keystore.p12
                 echo "Successfully created keystore."
+                echo "${{ secrets.CLIENT_TRUSTSTORE }}" > client.truststore.jks.asc
+                gpg -d --passphrase "${{ secrets.CLIENT_TRUSTSTORE_KEY }}" --batch client.truststore.jks.asc > client.truststore.jks
+                echo "Successfully created truststore."
                 
                 
 
