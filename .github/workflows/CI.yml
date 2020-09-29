@@ -47,6 +47,9 @@ jobs:
         -   name: Build with maven
             run: |
                 mvn -B --no-transfer-progress package --file pom.xml
+            env:
+                CLIENT_TRUSTSTORE_PASSWORD : ${{ secrets.CLIENT_TRUSTSTORE_PASSWORD }}
+                CLIENT_KEYSTORE_PASSWORD : ${{ secrets.CLIENT_KEYSTORE_PASSWORD }}
             working-directory: ./backend
 
     test:
