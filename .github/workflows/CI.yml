@@ -40,6 +40,10 @@ jobs:
                 key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         -   name: Build with maven
             run: |
+                echo "${{ secrets.CLIENT_KEYSTORE }}" > client.keystore.p12.asc
+                gpg -d --passphrase "{{ secrets.CLIENT_KEYSTORE_KEY }}" --batch client.keystore.p12.asc > client.keystore.p12
+                echo "${{ secrets.CLIENT_TRUSTSTORE }}" > client.truststore.jks.asc
+                gpg -d --passphrase "{{ secrets.CLIENT_TRUSTSTORE_KEY }}" --batch client.truststore.jks.asc > client.truststore.jks
                 mvn -B --no-transfer-progress package --file pom.xml
             working-directory: ./backend
 
