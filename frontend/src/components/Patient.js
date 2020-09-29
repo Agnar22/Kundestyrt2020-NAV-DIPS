@@ -1,7 +1,9 @@
 import React from "react";
 import { FhirClientContext } from "../FhirClientContext";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import PatientForm from "./PatientForm";
+import { Textarea } from 'nav-frontend-skjema';
+import { Hovedknapp } from 'nav-frontend-knapper';
+
 
 function PatientName({ name = [] }) {
     let entry =
@@ -30,10 +32,7 @@ function PatientBanner(patient) {
             <p>
                 Fødselsdato: <b>{patient.birthDate}</b>
             </p>
-            <form onSubmit={patient.handleSubmit}>
-                <textarea  defaultValue={patient.value} onChange={patient.handleOnTextAreaChange}/>
-                <button type="submit"> Send </button>
-            </form>
+            
         </div>
     );
 }
@@ -49,6 +48,7 @@ export default class Patient extends React.Component {
             error: null
         };
     }
+
     async componentDidMount() {
         const client = this.context.client;
         this._loader = await client.patient
@@ -61,14 +61,13 @@ export default class Patient extends React.Component {
             })  
     }
 
-    handleOnTextAreaChange(e) {
-        this.setState({value:e.target.value})
-        console.log("Logloglog")
-    }
+    handleChange = (event)  => {
+        this.setState({value: event.target.value});
+      }
 
-    handleSubmit(e){
-        e.preventDefault()
-        console.log("har trykket på submit")
+    handleSubmit = (event) => {
+        event.preventDefault();
+        console.log("TODO: Send avgårde ting til backend")
     }
 
     render() {
@@ -82,7 +81,11 @@ export default class Patient extends React.Component {
 
         return(
         <div>
-            <PatientBanner {...patient} handleTextAreaChange={e => this.handleOnTextAreaChange(e)} handleSubmit={e => this.handleSubmit(e)} value={this.state.value}/>
+            <PatientBanner {...patient} />
+            <form onSubmit={this.handleSubmit}>
+                <Textarea value={this.state.value} onChange={this.handleChange} />
+                <Hovedknapp htmlType="submit">Send</Hovedknapp>
+            </form>
         </div>
         );
     }
