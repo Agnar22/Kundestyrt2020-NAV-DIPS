@@ -16,6 +16,7 @@ jobs:
 
         steps:
         -   uses: actions/checkout@v2
+        
         -   name: Cache node modules
             uses: actions/cache@v1
             with:
@@ -23,12 +24,15 @@ jobs:
                 key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
                 restore-keys: |
                     ${{ runner.os }}-node-
+        
         -   name: npm install and build
+            uses: actions/setup-node@v1
             run: |
                 npm ci
                 npm run build
                 eslint ./src
             working-directory: ./frontend
+       
         -   name: setup JDK 1.11
             uses: actions/setup-java@v1
             with: 
@@ -40,11 +44,7 @@ jobs:
                 echo "${{ secrets.CLIENT_KEYSTORE }}" > client.keystore.p12.asc
                 gpg -d --passphrase "${{ secrets.CLIENT_KEYSTORE_KEY }}" --batch client.keystore.p12.asc > client.keystore.p12
                 echo "${{ secrets.CLIENT_TRUSTSTORE }}" > client.truststore.jks.asc
-                gpg -d --passphrase "${{ secrets.CLIENT_TRUSTSTORE_KEY }}" --batch client.truststore.jks.asc > client.truststore.jks
-            
-            
-                
-                
+                gpg -d --passphrase "${{ secrets.CLIENT_TRUSTSTORE_KEY }}" --batch client.truststore.jks.asc > client.truststore.jks     
 
         -   name: Build with maven
             run: |
@@ -66,10 +66,12 @@ jobs:
         
         steps:
         -   uses: actions/checkout@v2
+        
         -   name: Use Node.js ${{ matrix.node-version }}
             uses: actions/setup-node@v1
             with:
                 node-version: ${{ matrix.node-version }}
+        
         -   name: npm install, and test
             run: |
                 npm install
