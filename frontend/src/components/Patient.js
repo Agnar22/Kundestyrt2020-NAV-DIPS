@@ -3,15 +3,18 @@ import { FhirClientContext } from "../FhirClientContext";
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Textarea } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
+import "./Patient.less"
+//import {ReactComponent as NAVLogo} from "./Rød.svg"
+
 
 
 function PatientName({ name = [] }) {
     let entry =
         name.find(nameRecord => nameRecord.use === "official") || name[0];
     if (!entry) {
-        return <h1>Navn ikke funnet</h1>;
+        return <h3>Navn: Navn ikke funnet</h3>;
     }
-    return <h1>{entry.given.join(" ") + " " + entry.family}</h1>;
+    return <h3>Navn: {entry.given.join(" ") + " " + entry.family}</h3>;
 }
 
 function PatientSocialSecurityNumber({ identifier = [] }) {
@@ -26,7 +29,7 @@ function PatientSocialSecurityNumber({ identifier = [] }) {
 
 function PatientBanner(patient) {
     return (
-        <div>
+        <div className="wrapper">
             <PatientName name={patient.name} />
             <PatientSocialSecurityNumber identifier={patient.identifier}/>
             <p>
@@ -63,6 +66,7 @@ export default class Patient extends React.Component {
 
     handleChange = (event)  => {
         this.setState({value: event.target.value});
+        console.log(event.target.value)
       }
 
     handleSubmit = (event) => {
@@ -81,12 +85,18 @@ export default class Patient extends React.Component {
 
         return(
         <div>
+            <h1> Erklæring om pleiepenger</h1>
             <PatientBanner {...patient} />
             <form onSubmit={this.handleSubmit}>
-                <Textarea value={this.state.value} onChange={this.handleChange} />
-                <Hovedknapp htmlType="submit">Send</Hovedknapp>
+                <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0}/>
+                <Hovedknapp className="sendknapp" htmlType="submit">Send</Hovedknapp>
             </form>
         </div>
         );
     }
 }
+//TODO: Legg til en knapp også for Lagring av dokumentet (avbrudd i en søknad).
+
+//Diagnose.
+//<img alt="" style={"width:100px"}>{<NAVLogo/>}</img>
+//                <Hovedknapp className="lagreknapp" htmlType="submit">Lagre</Hovedknapp>
