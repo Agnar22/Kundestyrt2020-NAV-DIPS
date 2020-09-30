@@ -26,12 +26,11 @@ jobs:
                 restore-keys: |
                     ${{ runner.os }}-node-
         
-        -   name: npm install and build
+        -   name: npm install, lint and build
             run: |
-                
                 npm ci
                 npm run build
-                eslint ./src
+                ./node_modules/.bin/eslint ./src
             working-directory: ./frontend
        
         -   name: setup JDK 1.11
