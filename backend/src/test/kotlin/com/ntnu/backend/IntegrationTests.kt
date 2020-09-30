@@ -26,10 +26,12 @@ class IntegrationTests {
         thread(start = true) {
             consumerReady = true
             val timeNow = System.currentTimeMillis()
+            println("Current time is ${timeNow}")
 
             while (true) {
                 val records = kafkaConsumer.poll(500)
                 for (record in records) {
+                    println("Record created: ${record.timestamp()}")
                     if (record.timestamp() > timeNow) {
                         consumedMessages.add(record.value())
                     }
