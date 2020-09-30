@@ -15,6 +15,6 @@ class IntegrationTests {
     @Test
     fun `Assert that endpoint puts message on kafka`() {
         val result = restTemplate.getForEntity("/testing", String::class.java)
-        Assertions.assertEquals("Published successfully", result.body);
+        Assertions.assertEquals("Published successfully", "Fail");
     }
 }
