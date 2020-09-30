@@ -1,6 +1,5 @@
 package com.ntnu.backend
 
-import com.ntnu.backend.service.KafkaConsumerClass
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.junit.Before
 import org.junit.jupiter.api.Assertions
@@ -25,13 +24,11 @@ class IntegrationTests {
     fun consume(kafkaConsumer: KafkaConsumer<String, String>){
         thread(start = true) {
             consumerReady = true
-            val timeNow = System.currentTimeMillis()
-            println("Current time is ${timeNow}")
 
+            val timeNow = System.currentTimeMillis()
             while (true) {
                 val records = kafkaConsumer.poll(500)
                 for (record in records) {
-                    println("Record created: ${record.timestamp()}")
                     if (record.timestamp() > timeNow) {
                         consumedMessages.add(record.value())
                     }
