@@ -4,7 +4,8 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Textarea } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import "./Patient.less"
-//import {ReactComponent as NAVLogo} from "./Rød.svg"
+import { Datovelger } from 'nav-datovelger';
+
 
 
 
@@ -25,7 +26,6 @@ function PatientSocialSecurityNumber({ identifier = [] }) {
     }
     return <p>Fødselsnummer: <b>{socialSecurityNumber}</b></p>
 }
-
 
 function PatientBanner(patient) {
     return (
@@ -48,6 +48,8 @@ export default class Patient extends React.Component {
             loading: true,
             patient: null,
             value:"",
+            fromDate: null,
+            toDate: null,
             error: null
         };
     }
@@ -73,15 +75,23 @@ export default class Patient extends React.Component {
         event.preventDefault();
         console.log("TODO: Send avgårde ting til backend")
     }
+//TODO: fiks datodifferanseutregning.
+    dateDiff(from, to){
+        if (from == null || to == null ){
+            return null
+        }
+        return (Number(this.state.toDate.split(/[-]+/).pop()) -  Number(this.state.fromDate.split(/[-]+/).pop()));
+    }
 
     render() {
         const { error, loading, patient } = this.state;
         if (loading) {
-            return <NavFrontendSpinner />
+            return <NavFrontendSpinner />;
         }
         if (error) {
             return <p>{error.message}</p>;
         }
+
 
         return(
         <div>
@@ -89,14 +99,51 @@ export default class Patient extends React.Component {
             <PatientBanner {...patient} />
             <form onSubmit={this.handleSubmit}>
                 <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0}/>
-                <Hovedknapp className="sendknapp" htmlType="submit">Send</Hovedknapp>
+                <Hovedknapp className="knapp" htmlType="submit">Send</Hovedknapp>
+                <Hovedknapp className="knapp" htmlType="submit">Lagre</Hovedknapp>
+                <div className="datovelgere">
+                    <h4>Fra dato:</h4>
+                    <Datovelger onChange={(d) => this.setState({fromDate: d })}
+                                valgtDato={this.state.fromDate}
+                                kalender={{ visUkenumre: true }}
+                                visÅrVelger={true}
+                                locale={'nb'}
+                                avgrensninger={{
+                                    helgedagerIkkeTillatt: false,
+                                    ugyldigeTidsperioder: [
+                                        {
+                                            fom: '1900-01-01',
+                                            tom: '2000-01-01',
+                                        }
+                                    ],
+
+                                }} />
+                    <h4>Til dato:</h4>
+                    <Datovelger onChange={(d) => this.setState({toDate: d })}
+                                valgtDato={this.state.toDate}
+                                kalender={{ visUkenumre: true }}
+                                visÅrVelger={true}
+                                locale={'nb'}
+                                avgrensninger={{
+                                    helgedagerIkkeTillatt: false,
+                                    ugyldigeTidsperioder: [
+                                        {
+                                            fom: '1900-01-01',
+                                            tom: '2000-01-01',
+                                        }
+                                    ],
+                                    minDato: this.state.fromDate,
+                                }}  />
+{/* Om vi ønsker å vise antall dager?
+                    <h3>{this.dateDiff(this.state.toDate-this.state.fromDate)} dager</h3>
+*/}
+                </div>
             </form>
+
         </div>
         );
     }
 }
-//TODO: Legg til en knapp også for Lagring av dokumentet (avbrudd i en søknad).
 
-//Diagnose.
+//Diagnose
 //<img alt="" style={"width:100px"}>{<NAVLogo/>}</img>
-//                <Hovedknapp className="lagreknapp" htmlType="submit">Lagre</Hovedknapp>
