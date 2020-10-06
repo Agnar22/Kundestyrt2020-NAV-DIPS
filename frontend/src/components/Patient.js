@@ -108,7 +108,7 @@ export default class Patient extends React.Component {
                             disableToolbar
                             variant="inline"
                             format="DD. MMMM yyyy"
-                            id="from-date-picker"
+                            id="startdate-picker"
                             label="Fra dato"
                             value={this.state.startDate}
                             onChange={(d) => this.setState({startDate: d })}
@@ -117,7 +117,7 @@ export default class Patient extends React.Component {
                             disableToolbar
                             variant="inline"
                             format="DD. MMMM yyyy"
-                            id="from-date-picker"
+                            id="enddate-picker"
                             label="Til dato"
                             value={this.state.endDate}
                             onChange={(d) => this.setState({endDate: d })}
