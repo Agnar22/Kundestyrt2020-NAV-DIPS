@@ -81,8 +81,8 @@ export default class Patient extends React.Component {
         const patchOptions = [
             {
                "op": "replace",
-               "path": "/address/0/line/0",
-               "value": "testestserse" 
+               "path": "/telecom/1/value",
+               "value": this.state.value 
             }]
         
         const headers = {
@@ -95,12 +95,9 @@ export default class Patient extends React.Component {
             body: JSON.stringify(patchOptions),
             headers: headers,
             method: "PATCH"
-
         }
-        // const options = new RequestOptions;
         fhirclient.request(options)
         console.log(fhirclient)
-        console.log("TODO: Send avgårde ting til backend")
     }
 //TODO: fiks datodifferanseutregning.
     dateDiff(from, to){
