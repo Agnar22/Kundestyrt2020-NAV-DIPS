@@ -1,6 +1,6 @@
 import React from 'react';
 import { oauth2 as SMART } from 'fhirclient';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 
 export default class Launcher extends React.Component {
   /**
@@ -23,6 +23,6 @@ export default class Launcher extends React.Component {
   }
 
   render() {
-    return <CircularProgress />;
+    return <NavFrontendSpinner />;
   }
 }
