@@ -12,7 +12,6 @@ import {MuiPickersUtilsProvider, KeyboardDatePicker} from "@material-ui/pickers"
 
 moment.locale("nb"); // Set calendar to be norwegian (bokmaal)
 
-
 function PatientName({ name = [] }) {
     let entry =
         name.find(nameRecord => nameRecord.use === "official") || name[0];
@@ -52,8 +51,8 @@ export default class Patient extends React.Component {
             loading: true,
             patient: null,
             value:"",
-            fromDate: null,
-            toDate: null,
+            startDate: null,
+            endDate: null,
             error: null
         };
     }
@@ -84,7 +83,7 @@ export default class Patient extends React.Component {
         if (from == null || to == null ){
             return null
         }
-        return (Number(this.state.toDate.split(/[-]+/).pop()) -  Number(this.state.fromDate.split(/[-]+/).pop()));
+        return (Number(this.state.endDate.split(/[-]+/).pop()) -  Number(this.state.startDate.split(/[-]+/).pop()));
     }
 
     render() {
@@ -103,24 +102,30 @@ export default class Patient extends React.Component {
             <PatientBanner {...patient} />
             <form onSubmit={this.handleSubmit}>
                 <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0}/>
-                <Hovedknapp className="knapp" htmlType="submit">Send</Hovedknapp>
-                <Hovedknapp className="knapp" htmlType="submit">Lagre</Hovedknapp>
                 <div className="datovelgere">
-                    <h4>Fra dato:</h4>
                     <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={"nb"}>
                         <KeyboardDatePicker
                             disableToolbar
                             variant="inline"
-                            format="dd/MM/yyyy"
+                            format="DD. MMMM yyyy"
                             id="from-date-picker"
-                            label="Velg dato (dd/mm/yyyy)"
-                            value={this.state.fromDate}
-                            onChange={(d) => this.setState({fromDate: d })}
+                            label="Fra dato"
+                            value={this.state.startDate}
+                            onChange={(d) => this.setState({startDate: d })}
                             />
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="DD. MMMM yyyy"
+                            id="from-date-picker"
+                            label="Til dato"
+                            value={this.state.endDate}
+                            onChange={(d) => this.setState({endDate: d })}
+                        />
                     </MuiPickersUtilsProvider>
-{/* Om vi ønsker å vise antall dager?
-                    <h3>{this.dateDiff(this.state.toDate-this.state.fromDate)} dager</h3>
-*/}
+                    <br/>
+                    <Hovedknapp className="knapp" htmlType="submit">Send</Hovedknapp>
+                    <Hovedknapp className="knapp" htmlType="submit">Lagre</Hovedknapp>
                 </div>
             </form>
 
@@ -131,3 +136,4 @@ export default class Patient extends React.Component {
 
 //Diagnose
 //<img alt="" style={"width:100px"}>{<NAVLogo/>}</img>
+// Om vi ønsker å vise antall dager? <h3>{this.dateDiff(this.state.toDate-this.state.fromDate)} dager</h3>
