@@ -1,7 +1,8 @@
 import React from "react";
 import { FhirClientContext } from "../FhirClientContext";
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Textarea } from 'nav-frontend-skjema';
+import { Textarea, Input, Label } from 'nav-frontend-skjema';
+
 import { Hovedknapp } from 'nav-frontend-knapper';
 import "./Patient.less";
 
@@ -27,7 +28,11 @@ function PatientSocialSecurityNumber({ identifier = [] }) {
     if (!socialSecurityNumber){
         return <p>Fødelsnummer ikke funnet</p>
     }
-    return <p>Fødselsnummer: <b>{socialSecurityNumber}</b></p>
+    return (<>
+        <Label htmlFor="birthnr-input">Fødelsnummer:</Label>
+        <Input id="birthnr-input" disabled value={socialSecurityNumber} />
+    </>
+    )
 }
 
 function PatientBanner(patient) {
