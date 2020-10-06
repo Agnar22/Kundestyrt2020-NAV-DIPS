@@ -1,6 +1,6 @@
 import React from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import FhirClientContext from '../FhirClientContext';
+import { FhirClientContext } from '../FhirClientContext';
 
 function PatientName({ name = [] }) {
   const entry = name.find((nameRecord) => nameRecord.use === 'official') || name[0];
@@ -38,7 +38,7 @@ function PatientBanner(patient) {
 }
 
 export default class Patient extends React.Component {
-    static contextType = { FhirClientContext };
+    static contextType = FhirClientContext;
 
     constructor(props) {
       super(props);
@@ -69,7 +69,6 @@ export default class Patient extends React.Component {
       if (error) {
         return <p>{error.message}</p>;
       }
-      /* eslint-disable react/jsx-props-no-spreading */
-      return <PatientBanner {...patient} />;
+      return <PatientBanner {...patient} />; // eslint-disable-line react/jsx-props-no-spreading
     }
 }

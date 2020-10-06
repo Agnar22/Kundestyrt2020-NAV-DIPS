@@ -7,5 +7,5 @@ const context = {
   },
 };
 
-const FhirClientContext = React.createContext(context);
-export default FhirClientContext;
+/* eslint-disable import/prefer-default-export */
+export const FhirClientContext = React.createContext(context);

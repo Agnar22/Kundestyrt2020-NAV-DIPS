@@ -1,6 +1,6 @@
 import React from 'react';
 import { oauth2 as SMART } from 'fhirclient';
-import FhirClientContext from '../FhirClientContext';
+import { FhirClientContext } from '../FhirClientContext';
 
 export default class FhirClientProvider extends React.Component {
   constructor(props) {
