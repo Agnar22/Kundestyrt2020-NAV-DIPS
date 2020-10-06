@@ -4,12 +4,13 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Textarea } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import "./Patient.less";
-//import { Datovelger } from 'nav-datovelger';
 
-import DateFnsUtils from '@date-io/date-fns';
+import moment from "moment";
+import "moment/locale/nb";
+import MomentUtils from "@date-io/moment";
 import {MuiPickersUtilsProvider, KeyboardDatePicker} from "@material-ui/pickers";
 
-
+moment.locale("nb"); // Set calendar to be norwegian (bokmaal)
 
 
 function PatientName({ name = [] }) {
@@ -106,7 +107,7 @@ export default class Patient extends React.Component {
                 <Hovedknapp className="knapp" htmlType="submit">Lagre</Hovedknapp>
                 <div className="datovelgere">
                     <h4>Fra dato:</h4>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={"nb"}>
                         <KeyboardDatePicker
                             disableToolbar
                             variant="inline"
