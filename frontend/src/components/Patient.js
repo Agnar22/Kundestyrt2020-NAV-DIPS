@@ -3,8 +3,11 @@ import { FhirClientContext } from "../FhirClientContext";
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Textarea } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import "./Patient.less"
-import { Datovelger } from 'nav-datovelger';
+import "./Patient.less";
+//import { Datovelger } from 'nav-datovelger';
+
+import DateFnsUtils from '@date-io/date-fns';
+import {MuiPickersUtilsProvider, KeyboardDatePicker} from "@material-ui/pickers";
 
 
 
@@ -103,37 +106,17 @@ export default class Patient extends React.Component {
                 <Hovedknapp className="knapp" htmlType="submit">Lagre</Hovedknapp>
                 <div className="datovelgere">
                     <h4>Fra dato:</h4>
-                    <Datovelger onChange={(d) => this.setState({fromDate: d })}
-                                valgtDato={this.state.fromDate}
-                                kalender={{ visUkenumre: true }}
-                                visÅrVelger={true}
-                                locale={'nb'}
-                                avgrensninger={{
-                                    helgedagerIkkeTillatt: false,
-                                    ugyldigeTidsperioder: [
-                                        {
-                                            fom: '1900-01-01',
-                                            tom: '2000-01-01',
-                                        }
-                                    ],
-
-                                }} />
-                    <h4>Til dato:</h4>
-                    <Datovelger onChange={(d) => this.setState({toDate: d })}
-                                valgtDato={this.state.toDate}
-                                kalender={{ visUkenumre: true }}
-                                visÅrVelger={true}
-                                locale={'nb'}
-                                avgrensninger={{
-                                    helgedagerIkkeTillatt: false,
-                                    ugyldigeTidsperioder: [
-                                        {
-                                            fom: '1900-01-01',
-                                            tom: '2000-01-01',
-                                        }
-                                    ],
-                                    minDato: this.state.fromDate,
-                                }}  />
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="dd/MM/yyyy"
+                            id="from-date-picker"
+                            label="Velg dato (dd/mm/yyyy)"
+                            value={this.state.fromDate}
+                            onChange={(d) => this.setState({fromDate: d })}
+                            />
+                    </MuiPickersUtilsProvider>
 {/* Om vi ønsker å vise antall dager?
                     <h3>{this.dateDiff(this.state.toDate-this.state.fromDate)} dager</h3>
 */}
