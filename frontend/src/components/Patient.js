@@ -28,10 +28,10 @@ function PatientSocialSecurityNumber({ identifier = [] }) {
     if (!socialSecurityNumber){
         return <p>Fødelsnummer ikke funnet</p>
     }
-    return (<>
+    return (<div className="birthnr-wrapper">
         <Label htmlFor="birthnr-input">Fødelsnummer:</Label>
         <Input id="birthnr-input" disabled value={socialSecurityNumber} />
-    </>
+    </div>
     )
 }
 
