@@ -29,6 +29,7 @@
   },
   "scripts": {
     "lint": "./node_modules/.bin/eslint ./src",
+    "lint-fix": "./node_modules/.bin/eslint ./src --fix",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test --passWithNoTests",
