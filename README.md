@@ -35,8 +35,14 @@ At the moment, the backend is limited to receiving a GET request on [localhost:8
  - [Kafka producer](https://github.com/Agnar22/Kundestyrt2020-NAV-DIPS/blob/13_setup_kafka/backend/src/main/kotlin/com/ntnu/backend/controller/KafkaController.kt#L19)
  
 ## Kafka
-The backendapplication has a Kafkaproducer.
-To run the backend, one has to setup Kafka, as we have not yet set up a remote server securely.
-### Installation guides
+The backendapplication has a kafkaproducer & -consumer. It connects to bootstrap-servers, as specified in application.properties.
+To allow the kafkaproducer & -consumer to connect to NAVs kafka stream, we need to have a keystore and a truststore, as well as the respective passwords.
+ - Ask the owner of this repository to send the keystore and clientstore, as well as the respective passwords.
+ - Store the clientstore and keystore on your computer and set the CLIENT_KEYSTORE_LOCATION and CLIENT_TRUSTSTORE_LOCATION environment variables.
+   - In intellij, you can achieve this by: double tap shift -> "Edit configurations..." -> "+" -> "Spring boot"
+     - Set "Main class" to: com.ntnu.BackendApplication
+     - Set "Environment variables" to:<br>CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION>;CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD>;CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD;CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION>
+     
+If you want to run kafka locally, follow one one of these guides:
  - Windows: [Video by Daily Code Buffer](https://www.youtube.com/watch?v=EUzH9khPYgs)
  - Ubuntu 18.04: [Tutorial by DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-install-apache-kafka-on-ubuntu-18-04) 
