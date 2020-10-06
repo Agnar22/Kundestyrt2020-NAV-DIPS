@@ -76,6 +76,30 @@ export default class Patient extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
+        const fhirclient = this.context.client
+        // console.log(this.state.patient)
+        const patchOptions = [
+            {
+               "op": "replace",
+               "path": "/address/0/line/0",
+               "value": "testestserse" 
+            }]
+        
+        const headers = {
+            'Content-Type': "application/json-patch+json",
+            'Accept': "*/*"
+        }
+
+        const options = {
+            url: "https://r3.smarthealthit.org/Patient/234946",
+            body: JSON.stringify(patchOptions),
+            headers: headers,
+            method: "PATCH"
+
+        }
+        // const options = new RequestOptions;
+        fhirclient.request(options)
+        console.log(fhirclient)
         console.log("TODO: Send avgårde ting til backend")
     }
 //TODO: fiks datodifferanseutregning.
