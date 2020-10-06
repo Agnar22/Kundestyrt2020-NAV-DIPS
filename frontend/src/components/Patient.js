@@ -110,6 +110,9 @@ export default class Patient extends React.Component {
                             format="DD. MMMM yyyy"
                             id="startdate-picker"
                             label="Fra dato"
+                            maxDate={this.state.endDate ? this.state.endDate : undefined}
+                            maxDateMessage="Starten av perioden kan ikke være senere enn slutten av perioden"
+                            invalidDateMessage="Ugyldig datoformat"
                             value={this.state.startDate}
                             onChange={(d) => this.setState({startDate: d })}
                             />
@@ -119,6 +122,9 @@ export default class Patient extends React.Component {
                             format="DD. MMMM yyyy"
                             id="enddate-picker"
                             label="Til dato"
+                            minDate={this.state.startDate ? this.state.startDate : undefined}
+                            minDateMessage="Slutten av perioden kan ikke være tidligere enn starten av perioden"
+                            invalidDateMessage="Ugyldig datoformat"
                             value={this.state.endDate}
                             onChange={(d) => this.setState({endDate: d })}
                         />
