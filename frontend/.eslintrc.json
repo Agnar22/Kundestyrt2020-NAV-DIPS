@@ -11,9 +11,11 @@
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
     },
+    "parser": "babel-eslint",
     "parserOptions": {
         "ecmaFeatures": {
-            "jsx": true
+            "jsx": true,
+            "experimentalObjectRestSpread": true
         },
         "ecmaVersion": 2018,
         "sourceType": "module"
@@ -22,5 +24,11 @@
         "react"
     ],
     "rules": {
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "import/no-named-as-default": 0,
+        "import/no-named-as-default-member": 0,
+        "react/destructuring-assignment": 0,
+        "react/static-property-placement": 0,
+        "no-underscore-dangle": 0
     }
 }
