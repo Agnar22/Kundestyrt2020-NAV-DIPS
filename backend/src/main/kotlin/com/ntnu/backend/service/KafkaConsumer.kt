@@ -2,11 +2,13 @@ package com.ntnu.backend.service
 
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass
 import org.springframework.stereotype.Component
 import kotlin.concurrent.thread
 
 @Component
-class KafkaConsumer {
+@ConditionalOnMissingClass(value = ["com.ntnu.backend.IntegrationTests"])
+class KafkaConsumerClass {
 
     @Autowired
     fun consume(kafkaConsumer: KafkaConsumer<String, String>) {
