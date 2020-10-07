@@ -93,7 +93,7 @@ export default class Patient extends React.Component {
 
 
         return(
-        <div>
+        <div className="form-wrapper">
             <h1> Erklæring om pleiepenger</h1>
             <div className="banner-wrapper">
                 <PatientName name={patient.name} />
@@ -132,7 +132,6 @@ export default class Patient extends React.Component {
                     </MuiPickersUtilsProvider>
                 </div>
                 <div className="button-wrapper">
-                    <br/>
                     <Hovedknapp className="button" htmlType="submit">Send</Hovedknapp>
                     <Hovedknapp className="button" htmlType="submit">Lagre</Hovedknapp>
                 </div>
