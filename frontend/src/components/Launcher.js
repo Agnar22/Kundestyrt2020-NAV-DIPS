@@ -8,16 +8,16 @@ export default class Launcher extends React.Component {
      * is loaded directly. An EHR can still launch it by passing `iss`
      * and `launch` url parameters
      */
-    componentDidMount() {
-        SMART.authorize({
-            clientId: "my-client-id",
-            scope: "launch launch/patient patient/*.write patient/read offline_access",
-            redirectUri: "./app",
-            iss:
-                "https://launch.smarthealthit.org/v/r3/sim/" +
-                "eyJoIjoiMSIsImIiOiJmMDQ2MjkzNi1lYjRiLTRkYT" +
-                "EtYjQ1YS1mYmQ5NmViZjhjY2IiLCJlIjoic21hcnQt" +
-                "UHJhY3RpdGlvbmVyLTcxNjE0NTAyIn0/fhir",
+  componentDidMount() {
+    SMART.authorize({
+      clientId: 'my-client-id',
+      scope: 'launch launch/patient patient/*.write patient/read offline_access',
+      redirectUri: './app',
+      iss:
+                'https://launch.smarthealthit.org/v/r3/sim/'
+                + 'eyJoIjoiMSIsImIiOiJmMDQ2MjkzNi1lYjRiLTRkYT'
+                + 'EtYjQ1YS1mYmQ5NmViZjhjY2IiLCJlIjoic21hcnQt'
+                + 'UHJhY3RpdGlvbmVyLTcxNjE0NTAyIn0/fhir',
 
     });
   }

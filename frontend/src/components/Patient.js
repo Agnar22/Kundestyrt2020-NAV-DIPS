@@ -80,39 +80,41 @@ export default class Patient extends React.Component {
         });
     }
 
-    handleChange = (event)  => {
-        this.setState({value: event.target.value});
-      }
+    handleChange = (event) => {
+      this.setState({ value: event.target.value });
+    }
 
     handleSubmit = (event) => {
-        event.preventDefault();
+      event.preventDefault();
 
-        //PATCH request to FHIR api to update the patient's given name with textfield
-        const fhirclient = this.context.client
-        const patchOptions = [
-            {
-               "op": "replace",
-               "path": "/name/0/given/0",
-               "value": this.state.value 
-            }]
-        
-        const headers = {
-            'Content-Type': "application/json-patch+json",
-            'Accept': "*/*"
-        }
+      // PATCH request to FHIR api to update the patient's given name with textfield
+      const fhirclient = this.context.client;
+      const patchOptions = [
+        {
+          op: 'replace',
+          path: '/name/0/given/0',
+          value: this.state.value,
+        }];
 
-        const options = {
-            url: "https://r3.smarthealthit.org/Patient/" + this.state.patient.id,
-            body: JSON.stringify(patchOptions),
-            headers: headers,
-            method: "PATCH"
-        }
-        fhirclient.request(options)
+      const headers = {
+        'Content-Type': 'application/json-patch+json',
+        Accept: '*/*',
+      };
 
-       //Updates name frontend after changed with the request to FHIR above
-        let updatedPatient = this.state.patient;
-        updatedPatient.name[0].given[0] = this.state.value;
-        this.setState({patient: updatedPatient})
+      const options = {
+        url: `https://r3.smarthealthit.org/Patient/${this.state.patient.id}`,
+        body: JSON.stringify(patchOptions),
+        headers,
+        method: 'PATCH',
+      };
+      fhirclient.request(options);
+
+      // Updates name frontend after changed with the request to FHIR above
+      /* eslint-disable react/no-access-state-in-setstate */
+      const updatedPatient = this.state.patient;
+
+      updatedPatient.name[0].given[0] = this.state.value;
+      this.setState({ patient: updatedPatient });
     }
 
     // TODO: fiks datodifferanseutregning.
