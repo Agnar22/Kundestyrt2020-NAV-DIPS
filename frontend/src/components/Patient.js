@@ -14,27 +14,29 @@ import FhirClientContext from '../FhirClientContext';
 moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
 
 function PatientName({ name = [] }) {
-    const entry = name.find(nameRecord => nameRecord.use === "official") || name[0];
-    if (!entry) {
-        return <h3>Navn: Navn ikke funnet</h3>;
-    }
-    return(<div className="name-wrapper">
-        <Label htmlFor="name">Navn:</Label>
-        <Input id="name" disabled value={entry.given.join(" ") + " " + entry.family} />
-    </div>);
+  const entry = name.find((nameRecord) => nameRecord.use === 'official') || name[0];
+  if (!entry) {
+    return <h3>Navn: Navn ikke funnet</h3>;
+  }
+  return (
+    <div className="name-wrapper">
+      <Label htmlFor="name">Navn:</Label>
+      <Input id="name" disabled value={`${entry.given.join(' ')} ${entry.family}`} />
+    </div>
+  );
 }
 
 function PatientSocialSecurityNumber({ identifier = [] }) {
-    let socialSecurityNumber = 
-        identifier.find(sb => sb.system === "http://hl7.org/fhir/sid/us-ssn").value;
-    if (!socialSecurityNumber){
-        return <p>Fødelsnummer ikke funnet</p>
-    }
-    return (<div className="birthnr-wrapper">
-        <Label htmlFor="birthnr-input">Fødelsnummer:</Label>
-        <Input id="birthnr-input" disabled value={socialSecurityNumber} />
+  const socialSecurityNumber = identifier.find((sb) => sb.system === 'http://hl7.org/fhir/sid/us-ssn').value;
+  if (!socialSecurityNumber) {
+    return <p>Fødelsnummer ikke funnet</p>;
+  }
+  return (
+    <div className="birthnr-wrapper">
+      <Label htmlFor="birthnr-input">Fødelsnummer:</Label>
+      <Input id="birthnr-input" disabled value={socialSecurityNumber} />
     </div>
-    )
+  );
 }
 
 export default class Patient extends React.Component {
@@ -101,15 +103,6 @@ export default class Patient extends React.Component {
       this.setState({ patient: updatedPatient });
     }
 
-    // TODO: Implement and add to form
-    dateDiff(from, to) {
-      if (from == null || to == null) {
-        return null;
-      }
-      // TODO: Do some useful calculations
-      return null;
-    }
-
     /* eslint-disable react/jsx-props-no-spreading */
     render() {
       const { error, loading, patient } = this.state;
@@ -120,51 +113,50 @@ export default class Patient extends React.Component {
         return <p>{error.message}</p>;
       }
 
-        return(
+      return (
         <div className="form-wrapper">
-            <h1> Erklæring om pleiepenger</h1>
-            <div className="banner-wrapper">
-                <PatientName name={patient.name} />
-                <PatientSocialSecurityNumber identifier={patient.identifier}/>
+          <h1> Erklæring om pleiepenger</h1>
+          <div className="banner-wrapper">
+            <PatientName name={patient.name} />
+            <PatientSocialSecurityNumber identifier={patient.identifier} />
+          </div>
+          <form className="patientform" onSubmit={this.handleSubmit}>
+            <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0} />
+            <div className="datepicker-wrapper">
+              <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale="nb">
+                <KeyboardDatePicker
+                  className="datepicker"
+                  disableToolbar
+                  variant="inline"
+                  format="DD. MMMM yyyy"
+                  id="startdate-picker"
+                  label="Fra dato"
+                  maxDate={this.state.endDate ? this.state.endDate : undefined}
+                  maxDateMessage="Starten av perioden kan ikke være senere enn slutten av perioden"
+                  invalidDateMessage="Ugyldig datoformat"
+                  value={this.state.startDate}
+                  onChange={(d) => this.setState({ startDate: d })}
+                />
+                <KeyboardDatePicker
+                  className="datepicker"
+                  disableToolbar
+                  variant="inline"
+                  format="DD. MMMM yyyy"
+                  id="enddate-picker"
+                  label="Til dato"
+                  minDate={this.state.startDate ? this.state.startDate : undefined}
+                  minDateMessage="Slutten av perioden kan ikke være tidligere enn starten av perioden"
+                  invalidDateMessage="Ugyldig datoformat"
+                  value={this.state.endDate}
+                  onChange={(d) => this.setState({ endDate: d })}
+                />
+              </MuiPickersUtilsProvider>
             </div>
-            <form className="patientform" onSubmit={this.handleSubmit}>
-                <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0}/>
-                <div className="datepicker-wrapper">
-                    <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={"nb"}>
-                        <KeyboardDatePicker
-                            className="datepicker"
-                            disableToolbar
-                            variant="inline"
-                            format="DD. MMMM yyyy"
-                            id="startdate-picker"
-                            label="Fra dato"
-                            maxDate={this.state.endDate ? this.state.endDate : undefined}
-                            maxDateMessage="Starten av perioden kan ikke være senere enn slutten av perioden"
-                            invalidDateMessage="Ugyldig datoformat"
-                            value={this.state.startDate}
-                            onChange={(d) => this.setState({startDate: d })}
-                            />
-                        <KeyboardDatePicker
-                            className="datepicker"
-                            disableToolbar
-                            variant="inline"
-                            format="DD. MMMM yyyy"
-                            id="enddate-picker"
-                            label="Til dato"
-                            minDate={this.state.startDate ? this.state.startDate : undefined}
-                            minDateMessage="Slutten av perioden kan ikke være tidligere enn starten av perioden"
-                            invalidDateMessage="Ugyldig datoformat"
-                            value={this.state.endDate}
-                            onChange={(d) => this.setState({endDate: d })}
-                        />
-                    </MuiPickersUtilsProvider>
-                </div>
-                <div className="button-wrapper">
-                    <Hovedknapp className="button" htmlType="submit">Send</Hovedknapp>
-                    <Hovedknapp className="button" htmlType="submit">Lagre</Hovedknapp>
-                </div>
-            </form>
-
+            <div className="button-wrapper">
+              <Hovedknapp className="button" htmlType="submit">Send</Hovedknapp>
+              <Hovedknapp className="button" htmlType="submit">Lagre</Hovedknapp>
+            </div>
+          </form>
         </div>
       );
     }
