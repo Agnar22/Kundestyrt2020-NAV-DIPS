@@ -1,6 +1,7 @@
 import React from 'react';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Textarea } from 'nav-frontend-skjema';
+import { Textarea, Input, Label } from 'nav-frontend-skjema';
+
 import { Hovedknapp } from 'nav-frontend-knapper';
 import './Patient.less';
 
@@ -18,10 +19,10 @@ function PatientName({ name = [] }) {
     return <h3>Navn: Navn ikke funnet</h3>;
   }
   return (
-    <h3>
-      Navn:
-      {`${entry.given.join(' ')} ${entry.family}`}
-    </h3>
+    <div className="name-wrapper">
+      <Label htmlFor="name">Navn:</Label>
+      <Input id="name" disabled value={`${entry.given.join(' ')} ${entry.family}`} />
+    </div>
   );
 }
 
@@ -31,24 +32,9 @@ function PatientSocialSecurityNumber({ identifier = [] }) {
     return <p>Fødelsnummer ikke funnet</p>;
   }
   return (
-    <p>
-      Fødselsnummer:
-      <b>{socialSecurityNumber}</b>
-    </p>
-  );
-}
-
-function PatientBanner(patient) {
-  return (
-    <div className="wrapper">
-      <PatientName name={patient.name} />
-      <PatientSocialSecurityNumber identifier={patient.identifier} />
-      <p>
-        Fødselsdato:
-        {' '}
-        <b>{patient.birthDate}</b>
-      </p>
-
+    <div className="birthnr-wrapper">
+      <Label htmlFor="birthnr-input">Fødelsnummer:</Label>
+      <Input id="birthnr-input" disabled value={socialSecurityNumber} />
     </div>
   );
 }
@@ -117,14 +103,6 @@ export default class Patient extends React.Component {
       this.setState({ patient: updatedPatient });
     }
 
-    // TODO: fiks datodifferanseutregning.
-    dateDiff(from, to) {
-      if (from == null || to == null) {
-        return null;
-      }
-      return (Number(this.state.endDate.split(/[-]+/).pop()) - Number(this.state.startDate.split(/[-]+/).pop()));
-    }
-
     /* eslint-disable react/jsx-props-no-spreading */
     render() {
       const { error, loading, patient } = this.state;
@@ -136,14 +114,18 @@ export default class Patient extends React.Component {
       }
 
       return (
-        <div>
+        <div className="form-wrapper">
           <h1> Erklæring om pleiepenger</h1>
-          <PatientBanner {...patient} />
-          <form onSubmit={this.handleSubmit}>
+          <div className="banner-wrapper">
+            <PatientName name={patient.name} />
+            <PatientSocialSecurityNumber identifier={patient.identifier} />
+          </div>
+          <form className="patientform" onSubmit={this.handleSubmit}>
             <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0} />
-            <div className="datovelgere">
+            <div className="datepicker-wrapper">
               <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale="nb">
                 <KeyboardDatePicker
+                  className="datepicker"
                   disableToolbar
                   variant="inline"
                   format="DD. MMMM yyyy"
@@ -156,6 +138,7 @@ export default class Patient extends React.Component {
                   onChange={(d) => this.setState({ startDate: d })}
                 />
                 <KeyboardDatePicker
+                  className="datepicker"
                   disableToolbar
                   variant="inline"
                   format="DD. MMMM yyyy"
@@ -168,18 +151,13 @@ export default class Patient extends React.Component {
                   onChange={(d) => this.setState({ endDate: d })}
                 />
               </MuiPickersUtilsProvider>
-              <br />
-              <Hovedknapp className="knapp" htmlType="submit">Send</Hovedknapp>
-              <Hovedknapp className="knapp" htmlType="submit">Lagre</Hovedknapp>
+            </div>
+            <div className="button-wrapper">
+              <Hovedknapp className="button" htmlType="submit">Send</Hovedknapp>
+              <Hovedknapp className="button" htmlType="submit">Lagre</Hovedknapp>
             </div>
           </form>
-
         </div>
       );
     }
 }
-
-// Diagnose
-// <img alt="" style={"width:100px"}>{<NAVLogo/>}</img>
-// Om vi ønsker å vise antall dager?
-// <h3>{this.dateDiff(this.state.toDate-this.state.fromDate)} dager</h3>
