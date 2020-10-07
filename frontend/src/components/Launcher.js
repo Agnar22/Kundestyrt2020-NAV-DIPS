@@ -1,9 +1,9 @@
-import React from "react";
-import { oauth2 as SMART } from "fhirclient";
+import React from 'react';
+import { oauth2 as SMART } from 'fhirclient';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 
 export default class Launcher extends React.Component {
-    /**
+  /**
      * This is configured to make a Standalone Launch, just in case it
      * is loaded directly. An EHR can still launch it by passing `iss`
      * and `launch` url parameters
@@ -19,10 +19,10 @@ export default class Launcher extends React.Component {
                 "EtYjQ1YS1mYmQ5NmViZjhjY2IiLCJlIjoic21hcnQt" +
                 "UHJhY3RpdGlvbmVyLTcxNjE0NTAyIn0/fhir",
 
-        });
-    }
-    
-    render() {
-        return <NavFrontendSpinner />
-    }
+    });
+  }
+
+  render() {
+    return <NavFrontendSpinner />;
+  }
 }
