@@ -1,21 +1,20 @@
-import React from "react";
-import { FhirClientContext } from "../FhirClientContext";
+import React from 'react';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Textarea, Input, Label } from 'nav-frontend-skjema';
 
 import { Hovedknapp } from 'nav-frontend-knapper';
-import "./Patient.less";
+import './Patient.less';
 
-import moment from "moment";
-import "moment/locale/nb";
-import MomentUtils from "@date-io/moment";
-import {MuiPickersUtilsProvider, KeyboardDatePicker} from "@material-ui/pickers";
+import moment from 'moment';
+import 'moment/locale/nb';
+import MomentUtils from '@date-io/moment';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import FhirClientContext from '../FhirClientContext';
 
-moment.locale("nb"); // Set calendar to be norwegian (bokmaal)
+moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
 
 function PatientName({ name = [] }) {
-    let entry =
-        name.find(nameRecord => nameRecord.use === "official") || name[0];
+    const entry = name.find(nameRecord => nameRecord.use === "official") || name[0];
     if (!entry) {
         return <h3>Navn: Navn ikke funnet</h3>;
     }
@@ -38,59 +37,88 @@ function PatientSocialSecurityNumber({ identifier = [] }) {
     )
 }
 
-
 export default class Patient extends React.Component {
     static contextType = FhirClientContext;
+
     constructor(props) {
-        super(props);
-        this.state = {
-            loading: true,
-            patient: null,
-            value:"",
-            startDate: null,
-            endDate: null,
-            error: null
-        };
+      super(props);
+      this.state = {
+        loading: true,
+        patient: null,
+        value: '',
+        startDate: null,
+        endDate: null,
+        error: null,
+      };
     }
 
     async componentDidMount() {
-        const client = this.context.client;
-        this._loader = await client.patient
-            .read()
-            .then(patient => {
-                this.setState({ patient: patient, loading: false, error: false });
-            })
-            .catch(error => {
-                this.setState({ error, loading: false });
-            })  
+      const { client } = this.context;
+      this._loader = await client.patient
+        .read()
+        .then((patient) => {
+          this.setState({ patient, loading: false, error: false });
+        })
+        .catch((error) => {
+          this.setState({ error, loading: false });
+        });
     }
 
-    handleChange = (event)  => {
-        this.setState({value: event.target.value});
-        console.log(event.target.value)
-      }
+    handleChange = (event) => {
+      this.setState({ value: event.target.value });
+    }
 
     handleSubmit = (event) => {
-        event.preventDefault();
-        console.log("TODO: Send avgårde ting til backend")
-    }
-//TODO: fiks datodifferanseutregning.
-    dateDiff(from, to){
-        if (from == null || to == null ){
-            return null
-        }
-        return (Number(this.state.endDate.split(/[-]+/).pop()) -  Number(this.state.startDate.split(/[-]+/).pop()));
+      event.preventDefault();
+
+      // PATCH request to FHIR api to update the patient's given name with textfield
+      const fhirclient = this.context.client;
+      const patchOptions = [
+        {
+          op: 'replace',
+          path: '/name/0/given/0',
+          value: this.state.value,
+        }];
+
+      const headers = {
+        'Content-Type': 'application/json-patch+json',
+        Accept: '*/*',
+      };
+
+      const options = {
+        url: `https://r3.smarthealthit.org/Patient/${this.state.patient.id}`,
+        body: JSON.stringify(patchOptions),
+        headers,
+        method: 'PATCH',
+      };
+      fhirclient.request(options);
+
+      // Updates name frontend after changed with the request to FHIR above
+      /* eslint-disable react/no-access-state-in-setstate */
+      const updatedPatient = this.state.patient;
+
+      updatedPatient.name[0].given[0] = this.state.value;
+      this.setState({ patient: updatedPatient });
     }
 
+    // TODO: Implement and add to form
+    dateDiff(from, to) {
+      if (from == null || to == null) {
+        return null;
+      }
+      // TODO: Do some useful calculations
+      return null;
+    }
+
+    /* eslint-disable react/jsx-props-no-spreading */
     render() {
-        const { error, loading, patient } = this.state;
-        if (loading) {
-            return <NavFrontendSpinner />;
-        }
-        if (error) {
-            return <p>{error.message}</p>;
-        }
-
+      const { error, loading, patient } = this.state;
+      if (loading) {
+        return <NavFrontendSpinner />;
+      }
+      if (error) {
+        return <p>{error.message}</p>;
+      }
 
         return(
         <div className="form-wrapper">
@@ -138,10 +166,6 @@ export default class Patient extends React.Component {
             </form>
 
         </div>
-        );
+      );
     }
 }
-
-//Diagnose
-//<img alt="" style={"width:100px"}>{<NAVLogo/>}</img>
-// Om vi ønsker å vise antall dager? <h3>{this.dateDiff(this.state.toDate-this.state.fromDate)} dager</h3>

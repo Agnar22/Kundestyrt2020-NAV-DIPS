@@ -8,7 +8,14 @@ Install all necessary dependencies:
 ### `npm install`
 
 Start the app in development mode:
-### `npm start`
+### `npm start` 
+ <br />
+
+**If you want to run linter for the project:**
+### `npm run lint`
+Automatically fix small mistakes:
+### `npm run lint-fix`
+ <br />
 
 ## Build and run project with docker
 
