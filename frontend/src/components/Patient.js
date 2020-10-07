@@ -19,7 +19,10 @@ function PatientName({ name = [] }) {
     if (!entry) {
         return <h3>Navn: Navn ikke funnet</h3>;
     }
-    return <h3>Navn: {entry.given.join(" ") + " " + entry.family}</h3>;
+    return(<div className="name-wrapper">
+        <Label htmlFor="name">Navn:</Label>
+        <Input id="name" disabled value={entry.given.join(" ") + " " + entry.family} />
+    </div>);
 }
 
 function PatientSocialSecurityNumber({ identifier = [] }) {
@@ -35,18 +38,6 @@ function PatientSocialSecurityNumber({ identifier = [] }) {
     )
 }
 
-function PatientBanner(patient) {
-    return (
-        <div className="wrapper">
-            <PatientName name={patient.name} />
-            <PatientSocialSecurityNumber identifier={patient.identifier}/>
-            <p>
-                Fødselsdato: <b>{patient.birthDate}</b>
-            </p>
-            
-        </div>
-    );
-}
 
 export default class Patient extends React.Component {
     static contextType = FhirClientContext;
@@ -104,12 +95,16 @@ export default class Patient extends React.Component {
         return(
         <div>
             <h1> Erklæring om pleiepenger</h1>
-            <PatientBanner {...patient} />
-            <form onSubmit={this.handleSubmit}>
+            <div className="banner-wrapper">
+                <PatientName name={patient.name} />
+                <PatientSocialSecurityNumber identifier={patient.identifier}/>
+            </div>
+            <form className="patientform" onSubmit={this.handleSubmit}>
                 <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0}/>
-                <div className="datovelgere">
+                <div className="datepicker-wrapper">
                     <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={"nb"}>
                         <KeyboardDatePicker
+                            className="datepicker"
                             disableToolbar
                             variant="inline"
                             format="DD. MMMM yyyy"
@@ -122,6 +117,7 @@ export default class Patient extends React.Component {
                             onChange={(d) => this.setState({startDate: d })}
                             />
                         <KeyboardDatePicker
+                            className="datepicker"
                             disableToolbar
                             variant="inline"
                             format="DD. MMMM yyyy"
@@ -134,9 +130,11 @@ export default class Patient extends React.Component {
                             onChange={(d) => this.setState({endDate: d })}
                         />
                     </MuiPickersUtilsProvider>
+                </div>
+                <div className="button-wrapper">
                     <br/>
-                    <Hovedknapp className="knapp" htmlType="submit">Send</Hovedknapp>
-                    <Hovedknapp className="knapp" htmlType="submit">Lagre</Hovedknapp>
+                    <Hovedknapp className="button" htmlType="submit">Send</Hovedknapp>
+                    <Hovedknapp className="button" htmlType="submit">Lagre</Hovedknapp>
                 </div>
             </form>
 
