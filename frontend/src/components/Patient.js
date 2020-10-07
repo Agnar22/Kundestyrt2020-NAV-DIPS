@@ -71,17 +71,16 @@ export default class Patient extends React.Component {
 
     handleChange = (event)  => {
         this.setState({value: event.target.value});
-        console.log(event.target.value)
       }
 
     handleSubmit = (event) => {
         event.preventDefault();
         const fhirclient = this.context.client
-        // console.log(this.state.patient)
+        console.log(this.state.patient)
         const patchOptions = [
             {
                "op": "replace",
-               "path": "/telecom/1/value",
+               "path": "/name/0/given/0",
                "value": this.state.value 
             }]
         
@@ -91,13 +90,19 @@ export default class Patient extends React.Component {
         }
 
         const options = {
-            url: "https://r3.smarthealthit.org/Patient/234946",
+            url: "https://r3.smarthealthit.org/Patient/" + this.state.patient.id,
             body: JSON.stringify(patchOptions),
             headers: headers,
             method: "PATCH"
         }
         fhirclient.request(options)
-        console.log(fhirclient)
+        console.log(this.state.patient.name[0].given[0])
+       
+        let updatedPatient = this.state.patient;
+        updatedPatient.name[0].given[0] = this.state.value;
+        this.setState({patient: updatedPatient})
+        //this.setState({this.state.patient.name[0].given[0]: this.state.value})
+        //this.setState({patient : this.state.value});
     }
 //TODO: fiks datodifferanseutregning.
     dateDiff(from, to){
