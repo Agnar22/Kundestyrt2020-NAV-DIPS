@@ -1,6 +1,6 @@
 import React from 'react';
 import { oauth2 as SMART } from 'fhirclient';
-import { FhirClientContext } from '../FhirClientContext';
+import FhirClientContext from '../FhirClientContext';
 
 export default class FhirClientProvider extends React.Component {
   constructor(props) {
@@ -28,7 +28,7 @@ export default class FhirClientProvider extends React.Component {
           {({ client }) => {
             if (!client) {
               SMART.ready()
-                .then((client) => this.setState({ client })) // eslint-disable-line no-shadow
+                .then((currentclient) => this.setState({ client: currentclient }))
                 .catch((error) => this.setState({ error }));
               return null;
             }

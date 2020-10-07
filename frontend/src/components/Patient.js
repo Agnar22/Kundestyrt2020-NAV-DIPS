@@ -8,7 +8,7 @@ import moment from 'moment';
 import 'moment/locale/nb';
 import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import { FhirClientContext } from '../FhirClientContext';
+import FhirClientContext from '../FhirClientContext';
 
 moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
 
