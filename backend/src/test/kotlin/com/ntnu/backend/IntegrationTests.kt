@@ -1,7 +1,6 @@
 package com.ntnu.backend
 
 import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.junit.Before
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +18,6 @@ class IntegrationTests {
 
     val consumedMessages: MutableList<String> = ArrayList()
 
-    @Before
     @Autowired
     fun consume(kafkaConsumer: KafkaConsumer<String, String>){
         thread(start = true) {
