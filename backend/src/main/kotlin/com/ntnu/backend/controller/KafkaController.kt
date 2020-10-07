@@ -3,9 +3,7 @@ package com.ntnu.backend.controller
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.http.HttpStatus
 import org.springframework.kafka.core.KafkaTemplate
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
@@ -18,5 +16,12 @@ class KafkaController(val kafkaTemplate: KafkaTemplate<String, String>, properti
     fun publishMessage(): String {
         kafkaTemplate.send(topic, "testmessage");
         return "Published successfully";
+    }
+
+    @PostMapping("/send-application")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun sendApplication(@RequestBody application: String): String {
+        kafkaTemplate.send(topic, "Application with content: ${application}")
+        return "Published application with content ${application}."
     }
 }
