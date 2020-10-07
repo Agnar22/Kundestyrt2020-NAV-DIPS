@@ -75,8 +75,9 @@ export default class Patient extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
+
+        //PATCH request to FHIR api to update the patient's given name with textfield
         const fhirclient = this.context.client
-        console.log(this.state.patient)
         const patchOptions = [
             {
                "op": "replace",
@@ -96,13 +97,11 @@ export default class Patient extends React.Component {
             method: "PATCH"
         }
         fhirclient.request(options)
-        console.log(this.state.patient.name[0].given[0])
-       
+
+       //Updates name frontend after changed with the request to FHIR above
         let updatedPatient = this.state.patient;
         updatedPatient.name[0].given[0] = this.state.value;
         this.setState({patient: updatedPatient})
-        //this.setState({this.state.patient.name[0].given[0]: this.state.value})
-        //this.setState({patient : this.state.value});
     }
 //TODO: fiks datodifferanseutregning.
     dateDiff(from, to){
