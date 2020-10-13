@@ -10,6 +10,7 @@ import 'moment/locale/nb';
 import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import FhirClientContext from '../FhirClientContext';
+import QuestionnaireResponseTemplate from '../QuestionnaireResponseTemplate.json';
 
 moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
 
@@ -105,6 +106,7 @@ export default class Patient extends React.Component {
 
     /* eslint-disable react/jsx-props-no-spreading */
     render() {
+        console.log(QuestionnaireResponseTemplate);
       const { error, loading, patient } = this.state;
       if (loading) {
         return <NavFrontendSpinner />;

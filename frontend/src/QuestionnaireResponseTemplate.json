@@ -1,0 +1,67 @@
+{
+    "resourceType": "QuestionnaireResponse",
+    "meta": {
+        "profile": [
+            "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse%7C2.7"
+        ],
+        "tag": [
+            {
+                "code": "lformsVersion: 25.1.5"
+            }
+        ]
+    },
+    "questionnaire": {"reference": "Questionnaire/235084"},
+    "status": "completed",
+    "authored": "2020-10-13T08:21:10.916Z",
+    "item": [
+        {
+            "linkId": "spm_navn",
+            "text": "Navn",
+            "answer": [
+                {
+                    "valueString": "Preben Lohrengren"
+                }
+            ]
+        },
+        {
+            "linkId": "spm_personnummer",
+            "text": "Personnummer",
+            "answer": [
+                {
+                    "valueString": "12038940585"
+                }
+            ]
+        },
+        {
+            "linkId": "spm_dato_fra",
+            "text": "Dato fra",
+            "answer": [
+                {
+                    "valueString": "13102020"
+                }
+            ]
+        },
+        {
+            "linkId": "spm_dato_til",
+            "text": "Dato til",
+            "answer": [
+                {
+                    "valueString": "12102020"
+                }
+            ]
+        },
+        {
+            "linkId": "spm_notater",
+            "text": "Notater",
+            "answer": [
+                {
+                    "valueString": "Dette er en annen test"
+                }
+            ]
+        }
+    ],
+    "subject": {
+        "reference": "Patient/235085",
+        "display": "Preben Lohrengren"
+    }
+}
