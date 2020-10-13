@@ -22,6 +22,8 @@ class FHIR(val kafkaTemplate: KafkaTemplate<String, String>) {
             while (true) {
                 val response = khttp.get("https://r3.smarthealthit.org/QuestionnaireResponse", headers = mapOf("Content-Type" to "application/fhir-json"))
                 val forms = response.jsonObject.getJSONArray("entry")
+                val lastUpdated = response.jsonObject.getJSONObject("meta").get("lastUpdated")
+                println("last updated ${lastUpdated}")
                 forms.forEach{
                     val form : JSONArray = (it as JSONObject).getJSONObject("resource").getJSONArray("item")
                     kafkaTemplate.send(topic, form.toString())
