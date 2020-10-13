@@ -66,6 +66,7 @@ export default class Patient extends React.Component {
         responseForm.subject.display = fullPatientName;
         responseForm.item[0].answer[0].valueString = fullPatientName;
         responseForm.item[1].answer[0].valueString = socialSecurityNumber;
+        //ToDo: Check that date pickers are not null. This gives an error
         responseForm.item[2].answer[0].valueString = this.state.startDate._d;
         responseForm.item[3].answer[0].valueString = this.state.endDate._d;
         responseForm.item[4].answer[0].valueString = this.state.value; 
@@ -115,7 +116,7 @@ export default class Patient extends React.Component {
 
       fhirclient.request(options);
     }
-    
+
 
     /* eslint-disable react/jsx-props-no-spreading */
     render() {
