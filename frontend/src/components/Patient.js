@@ -11,6 +11,7 @@ import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import FhirClientContext from '../FhirClientContext';
 import QuestionnaireResponseTemplate from '../QuestionnaireResponseTemplate.json';
+import { responsiveFontSizes } from '@material-ui/core';
 
 moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
 
@@ -55,6 +56,23 @@ export default class Patient extends React.Component {
       };
     }
 
+    //Gets QuestionnaireResponseTemplate.json and fills out with current patients information, before returning the form. 
+    getAndFillResponseForm = () => {
+        const fullPatientName = `${this.state.patient.name[0].given.join(" ")} ${this.state.patient.name[0].family}`;
+        const socialSecurityNumber = this.state.patient.identifier.find((sb) => sb.system === 'http://hl7.org/fhir/sid/us-ssn').value;
+
+        const responseForm=QuestionnaireResponseTemplate;
+        responseForm.subject.reference = `Patient/${this.state.patient.id}`;
+        responseForm.subject.display = fullPatientName;
+        responseForm.item[0].answer[0].valueString = fullPatientName;
+        responseForm.item[1].answer[0].valueString = socialSecurityNumber;
+        responseForm.item[2].answer[0].valueString = this.state.startDate._d;
+        responseForm.item[3].answer[0].valueString = this.state.endDate._d;
+        responseForm.item[4].answer[0].valueString = this.state.value; 
+
+        return responseForm;
+    } 
+
     async componentDidMount() {
       const { client } = this.context;
       this._loader = await client.patient
@@ -71,42 +89,36 @@ export default class Patient extends React.Component {
       this.setState({ value: event.target.value });
     }
 
+    //Function for saving a questionnaire response for current patient
+    handleSave = (event) =>{
+        //ToDo: Make more functionality for saving form 
+        const filledResponse = this.getAndFillResponseForm();
+    }
+
+    //Function for sending an questionnaire response for current patient
     handleSubmit = (event) => {
       event.preventDefault();
 
-      // PATCH request to FHIR api to update the patient's given name with textfield
       const fhirclient = this.context.client;
-      const patchOptions = [
-        {
-          op: 'replace',
-          path: '/name/0/given/0',
-          value: this.state.value,
-        }];
-
+      
       const headers = {
-        'Content-Type': 'application/json-patch+json',
+        'Content-Type': 'application/fhir+json',
         Accept: '*/*',
       };
 
       const options = {
-        url: `https://r3.smarthealthit.org/Patient/${this.state.patient.id}`,
-        body: JSON.stringify(patchOptions),
+        url: `https://r3.smarthealthit.org/QuestionnaireResponse`,
+        body: JSON.stringify(this.getAndFillResponseForm()),
         headers,
-        method: 'PATCH',
+        method: 'POST',
       };
+
       fhirclient.request(options);
-
-      // Updates name frontend after changed with the request to FHIR above
-      /* eslint-disable react/no-access-state-in-setstate */
-      const updatedPatient = this.state.patient;
-
-      updatedPatient.name[0].given[0] = this.state.value;
-      this.setState({ patient: updatedPatient });
     }
+    
 
     /* eslint-disable react/jsx-props-no-spreading */
     render() {
-        console.log(QuestionnaireResponseTemplate);
       const { error, loading, patient } = this.state;
       if (loading) {
         return <NavFrontendSpinner />;
@@ -156,7 +168,7 @@ export default class Patient extends React.Component {
             </div>
             <div className="button-wrapper">
               <Hovedknapp className="button" htmlType="submit">Send</Hovedknapp>
-              <Hovedknapp className="button" htmlType="submit">Lagre</Hovedknapp>
+              <Hovedknapp className="button" onClick={this.handleSave}>Lagre</Hovedknapp>
             </div>
           </form>
         </div>
