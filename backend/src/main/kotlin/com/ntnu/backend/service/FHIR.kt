@@ -50,12 +50,9 @@ class FHIR(val kafkaTemplate: KafkaTemplate<String, String>) {
                     kafkaTemplate.send(topic, form.toString())
                 }
 
-                Thread.sleep(sleepTime)
-
                 lastUpdated = response.getJSONObject("meta").get("lastUpdated") as String
                 writeTimestamp(lastUpdated)
-
-
+                Thread.sleep(sleepTime)
             }
         }
     }
