@@ -1,18 +1,9 @@
 {
     "resourceType": "QuestionnaireResponse",
-    "meta": {
-        "profile": [
-            "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse%7C2.7"
-        ],
-        "tag": [
-            {
-                "code": "lformsVersion: 25.1.5"
-            }
-        ]
-    },
-    "questionnaire": {"reference": "Questionnaire/235084"},
+    "questionnaire": {"reference": "Questionnaire/235109"},
     "status": "completed",
     "authored": "2020-10-13T08:21:10.916Z",
+    "author": { "reference":""},
     "item": [
         {
             "linkId": "spm_navn",

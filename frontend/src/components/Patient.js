@@ -11,7 +11,7 @@ import MomentUtils from '@date-io/moment';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import FhirClientContext from '../FhirClientContext';
 import QuestionnaireResponseTemplate from '../QuestionnaireResponseTemplate.json';
-import { responsiveFontSizes } from '@material-ui/core';
+//import { responsiveFontSizes } from '@material-ui/core';
 
 moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
 
@@ -57,7 +57,7 @@ export default class Patient extends React.Component {
     }
 
     //Gets QuestionnaireResponseTemplate.json and fills out with current patients information, before returning the form. 
-    getAndFillResponseForm = () => {
+    getAndFillResponseForm = (status) => {
         const fullPatientName = `${this.state.patient.name[0].given.join(" ")} ${this.state.patient.name[0].family}`;
         const socialSecurityNumber = this.state.patient.identifier.find((sb) => sb.system === 'http://hl7.org/fhir/sid/us-ssn').value;
 
@@ -66,10 +66,16 @@ export default class Patient extends React.Component {
         responseForm.subject.display = fullPatientName;
         responseForm.item[0].answer[0].valueString = fullPatientName;
         responseForm.item[1].answer[0].valueString = socialSecurityNumber;
-        //ToDo: Check that date pickers are not null. This gives an error
         responseForm.item[2].answer[0].valueString = this.state.startDate._d;
         responseForm.item[3].answer[0].valueString = this.state.endDate._d;
-        responseForm.item[4].answer[0].valueString = this.state.value; 
+        responseForm.item[4].answer[0].valueString = this.state.value;
+
+        //Gets the fhirUser-ID of the practitioner and fills it in the form
+        responseForm.author.reference= this.context.client.user.fhirUser;
+
+        //Sets the status of the QuestionnaireResponse-form to the functions argument 
+        responseForm.status=status;
+         
 
         return responseForm;
     } 
@@ -86,6 +92,7 @@ export default class Patient extends React.Component {
         });
     }
 
+
     handleChange = (event) => {
       this.setState({ value: event.target.value });
     }
@@ -93,7 +100,8 @@ export default class Patient extends React.Component {
     //Function for saving a questionnaire response for current patient
     handleSave = (event) =>{
         //ToDo: Make more functionality for saving form 
-        const filledResponse = this.getAndFillResponseForm();
+        const filledResponse = this.getAndFillResponseForm("in-progress");
+        console.log(filledResponse);
     }
 
     //Function for sending an questionnaire response for current patient
@@ -109,7 +117,7 @@ export default class Patient extends React.Component {
 
       const options = {
         url: `https://r3.smarthealthit.org/QuestionnaireResponse`,
-        body: JSON.stringify(this.getAndFillResponseForm()),
+        body: JSON.stringify(this.getAndFillResponseForm("completed")),
         headers,
         method: 'POST',
       };
