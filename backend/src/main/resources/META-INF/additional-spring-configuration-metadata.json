@@ -1,8 +1,0 @@
-{
-  "properties": [
-    {
-      "name": "fhir.questionnaire",
-      "type": "java.lang.String",
-      "description": "Description for fhir.questionnaire."
-  }
-] }

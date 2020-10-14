@@ -18,9 +18,7 @@ class FHIR(val kafkaTemplate: KafkaTemplate<String, String>) {
     @Value("\${spring.kafka.template.default-topic}")
     val topic : String = ""
 
-    @Value("\${fhir.questionnaire}")
-    val questionnaire : String = ""
-
+    val questionnaire : String = "Questionnaire/235084"
 
     fun writeTimestamp(lastUpdated: String){
       Files.write(Paths.get("timestamps.txt"), (lastUpdated).toByteArray(), StandardOpenOption.WRITE)
