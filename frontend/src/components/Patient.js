@@ -62,6 +62,7 @@ export default class Patient extends React.Component {
         .read()
         .then((patient) => {
           this.setState({ patient, loading: false, error: false });
+          this.formData();
         })
         .catch((error) => {
           this.setState({ error, loading: false });
@@ -94,6 +95,19 @@ export default class Patient extends React.Component {
       return responseForm;
     }
 
+    formData(){
+      const fhirclient = this.context.client;
+      console.log(fhirclient.patient.id);
+      // QuestionnaireResponse for Preben blir returnert uansett. Fiks det
+      const result = fhirclient.request(`https://r3.smarthealthit.org/QuestionnaireResponse/_search?questionnaire=235109&_subject.reference="Patient/${fhirclient.patient.id}"&status=in-progress`)
+      .then((result) => {
+        if (result.total === 0){return};
+        this.setState({value: result.entry[0].resource.item[4].answer[0].valueString});
+        this.setState({startDate: result.entry[0].resource.item[2].answer[0].valueString});
+        this.setState({endDate: result.entry[0].resource.item[3].answer[0].valueString});
+      }).catch();
+    }
+
     handleChange = (event) => {
       this.setState({ value: event.target.value });
     }
@@ -101,6 +115,8 @@ export default class Patient extends React.Component {
     // Function for saving a questionnaire response for current patient
     handleSave = (event) => {
       event.preventDefault();
+      this.formData();
+      return
       // ToDo: Make more functionality for saving form
       const filledResponse = this.getAndFillResponseForm('in-progress');
       console.log(filledResponse);
