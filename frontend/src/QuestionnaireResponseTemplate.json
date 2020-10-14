@@ -19,7 +19,7 @@
             "text": "Navn",
             "answer": [
                 {
-                    "valueString": "Preben Lohrengren"
+                    "valueString": ""
                 }
             ]
         },
@@ -28,7 +28,7 @@
             "text": "Personnummer",
             "answer": [
                 {
-                    "valueString": "12038940585"
+                    "valueString": ""
                 }
             ]
         },
@@ -37,7 +37,7 @@
             "text": "Dato fra",
             "answer": [
                 {
-                    "valueString": "13102020"
+                    "valueString": ""
                 }
             ]
         },
@@ -46,7 +46,7 @@
             "text": "Dato til",
             "answer": [
                 {
-                    "valueString": "12102020"
+                    "valueString": ""
                 }
             ]
         },
@@ -55,13 +55,13 @@
             "text": "Notater",
             "answer": [
                 {
-                    "valueString": "Dette er en annen test"
+                    "valueString": ""
                 }
             ]
         }
     ],
     "subject": {
-        "reference": "Patient/235085",
-        "display": "Preben Lohrengren"
+        "reference": "",
+        "display": ""
     }
 }
