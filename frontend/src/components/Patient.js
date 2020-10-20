@@ -80,14 +80,10 @@ export default class Patient extends React.Component {
 
         if (typeof (result.entry[0].resource.item[2].answer) !== 'undefined') {
           this.setState({ startDate: result.entry[0].resource.item[2].answer[0].valueString });
-        } else {
-          this.setState({ startDate: '' });
         }
 
         if (typeof (result.entry[0].resource.item[3].answer) !== 'undefined') {
           this.setState({ endDate: result.entry[0].resource.item[3].answer[0].valueString });
-        } else {
-          this.setState({ endDate: '' });
         }
       }).catch((e) => {
         console.log('Error loading formData: ', e);
