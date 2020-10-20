@@ -98,8 +98,8 @@ export default class Patient extends React.Component {
     formData(){
       const fhirclient = this.context.client;
       console.log(fhirclient.patient.id);
-      // QuestionnaireResponse for Preben blir returnert uansett. Fiks det
-      const result = fhirclient.request(`https://r3.smarthealthit.org/QuestionnaireResponse/_search?questionnaire=235109&_subject.reference="Patient/${fhirclient.patient.id}"&status=in-progress`)
+      console.log("Hei:", fhirclient.patient.id);
+      const result = fhirclient.request(`https://r3.smarthealthit.org/QuestionnaireResponse/_search?questionnaire=235126&patient=${fhirclient.patient.id}&status=in-progress`)
       .then((result) => {
         if (result.total === 0){return};
         this.setState({value: result.entry[0].resource.item[4].answer[0].valueString});
@@ -118,7 +118,7 @@ export default class Patient extends React.Component {
     handleSave = (event) => {
       event.preventDefault();
       const filledResponse = this.convertToQuestionnaire('in-progress');
-      // TODO: Send filledResponse to FHIR
+      // TODO: Send filledResponse to FHIR by patching if already excisting or creating a new response
       console.log(filledResponse);
     }
 
