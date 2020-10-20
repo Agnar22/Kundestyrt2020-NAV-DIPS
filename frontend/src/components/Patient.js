@@ -82,8 +82,8 @@ export default class Patient extends React.Component {
       responseForm.subject.display = fullPatientName;
       responseForm.item[0].answer[0].valueString = fullPatientName;
       responseForm.item[1].answer[0].valueString = socialSecurityNumber;
-      responseForm.item[2].answer[0].valueString = this.state.startDate._d;
-      responseForm.item[3].answer[0].valueString = this.state.endDate._d;
+      responseForm.item[2].answer[0].valueString = this.state.startDate ? this.state.startDate._d : "";
+      responseForm.item[3].answer[0].valueString = this.state.endDate ? this.state.endDate._d : "";
       responseForm.item[4].answer[0].valueString = this.state.value;
 
       // Gets the fhirUser-ID of the practitioner and fills it in the form
@@ -105,24 +105,29 @@ export default class Patient extends React.Component {
         this.setState({value: result.entry[0].resource.item[4].answer[0].valueString});
         this.setState({startDate: result.entry[0].resource.item[2].answer[0].valueString});
         this.setState({endDate: result.entry[0].resource.item[3].answer[0].valueString});
-      }).catch();
+      }).catch(e => {
+        console.log('Error loading formData: ', e)
+      });
     }
 
     handleChange = (event) => {
       this.setState({ value: event.target.value });
     }
 
-    // Function for saving a questionnaire response for current patient
+    // Function for saving the information in our form to FHIR
     handleSave = (event) => {
       event.preventDefault();
-      this.formData();
-      return
-      // ToDo: Make more functionality for saving form
       const filledResponse = this.convertToQuestionnaire('in-progress');
+      // TODO: Send filledResponse to FHIR
       console.log(filledResponse);
     }
 
-    // Function for sending an questionnaire response for current patient
+    testFormData = e => {
+      e.preventDefault();
+      this.formData();
+    }
+
+    // Function for saving the information in our form to FHIR and sending it to Kafka-stream
     handleSubmit = (event) => {
       event.preventDefault();
 
@@ -193,8 +198,9 @@ export default class Patient extends React.Component {
               </MuiPickersUtilsProvider>
             </div>
             <div className="button-wrapper">
-              <Hovedknapp className="button" htmlType="submit">Send</Hovedknapp>
               <Hovedknapp className="button" onClick={this.handleSave}>Lagre</Hovedknapp>
+              <Hovedknapp className="button" htmlType="submit">Send</Hovedknapp>
+              <Hovedknapp className="button" onClick={this.testFormData}>TESTETEST</Hovedknapp>
             </div>
           </form>
         </div>
