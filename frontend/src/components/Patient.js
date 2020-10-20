@@ -1,17 +1,17 @@
 import React from 'react';
+import './Patient.less';
+import FhirClientContext from '../FhirClientContext';
+import QuestionnaireResponseTemplate from '../QuestionnaireResponseTemplate.json';
+
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Textarea, Input, Label } from 'nav-frontend-skjema';
-
 import { Hovedknapp } from 'nav-frontend-knapper';
-import './Patient.less';
+
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
 import moment from 'moment';
 import 'moment/locale/nb';
 import MomentUtils from '@date-io/moment';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
-import FhirClientContext from '../FhirClientContext';
-import QuestionnaireResponseTemplate from '../QuestionnaireResponseTemplate.json';
-// import { responsiveFontSizes } from '@material-ui/core';
 
 moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
 
@@ -99,15 +99,15 @@ export default class Patient extends React.Component {
       const fhirclient = this.context.client;
       console.log(fhirclient.patient.id);
       console.log("Hei:", fhirclient.patient.id);
-      const result = fhirclient.request(`https://r3.smarthealthit.org/QuestionnaireResponse/_search?questionnaire=235126&patient=${fhirclient.patient.id}&status=in-progress`)
-      .then((result) => {
-        if (result.total === 0){return};
-        this.setState({value: result.entry[0].resource.item[4].answer[0].valueString});
-        this.setState({startDate: result.entry[0].resource.item[2].answer[0].valueString});
-        this.setState({endDate: result.entry[0].resource.item[3].answer[0].valueString});
-      }).catch(e => {
-        console.log('Error loading formData: ', e)
-      });
+      fhirclient.request(`https://r3.smarthealthit.org/QuestionnaireResponse/_search?questionnaire=235126&patient=${fhirclient.patient.id}&status=in-progress`)
+        .then((result) => {
+          if (result.total === 0){return};
+          this.setState({value: result.entry[0].resource.item[4].answer[0].valueString});
+          this.setState({startDate: result.entry[0].resource.item[2].answer[0].valueString});
+          this.setState({endDate: result.entry[0].resource.item[3].answer[0].valueString});
+        }).catch(e => {
+          console.log('Error loading formData: ', e)
+        });
     }
 
     handleChange = (event) => {
@@ -147,6 +147,8 @@ export default class Patient extends React.Component {
       };
 
       fhirclient.request(options);
+
+      // TODO: Send information in form to backend (kafka)
     }
 
     /* eslint-disable react/jsx-props-no-spreading */
