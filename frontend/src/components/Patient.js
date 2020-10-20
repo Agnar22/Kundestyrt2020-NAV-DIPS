@@ -71,7 +71,7 @@ export default class Patient extends React.Component {
 
     // Gets QuestionnaireResponseTemplate.json and fills out with current patients information,
     // before returning the form.
-    getAndFillResponseForm = (status) => {
+    convertToQuestionnaire = (status) => {
       const fullPatientName = `${this.state.patient.name[0].given
         .join(' ')} ${this.state.patient.name[0].family}`;
       const socialSecurityNumber = this.state.patient.identifier
@@ -118,7 +118,7 @@ export default class Patient extends React.Component {
       this.formData();
       return
       // ToDo: Make more functionality for saving form
-      const filledResponse = this.getAndFillResponseForm('in-progress');
+      const filledResponse = this.convertToQuestionnaire('in-progress');
       console.log(filledResponse);
     }
 
@@ -135,7 +135,7 @@ export default class Patient extends React.Component {
 
       const options = {
         url: 'https://r3.smarthealthit.org/QuestionnaireResponse',
-        body: JSON.stringify(this.getAndFillResponseForm('completed')),
+        body: JSON.stringify(this.convertToQuestionnaire('completed')),
         headers,
         method: 'POST',
       };
