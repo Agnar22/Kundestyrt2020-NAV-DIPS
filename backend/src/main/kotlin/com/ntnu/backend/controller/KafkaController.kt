@@ -2,6 +2,7 @@ package com.ntnu.backend.controller
 
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.web.bind.annotation.*
 
@@ -20,8 +21,18 @@ class KafkaController(val kafkaTemplate: KafkaTemplate<String, String>, properti
 
     @PostMapping("/send-application")
     @ResponseStatus(HttpStatus.CREATED)
-    fun sendApplication(@RequestBody application: String): String {
-        kafkaTemplate.send(topic, "Application with content: ${application}")
-        return "Published application with content ${application}."
+    fun sendApplication(@RequestHeader(name="Authorization") token: String, @RequestBody questionnaireResponseId: String): ResponseEntity<String> {
+        val response = khttp.get("http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/${questionnaireResponseId}", headers = mapOf("Authorization" to token, "Content-Type" to "application/fhir-json"))
+        return when (response.statusCode) {
+            200 -> {
+                kafkaTemplate.send(topic, response.text)
+                ResponseEntity.ok("Published application!")
+            }
+            else -> {
+                ResponseEntity.badRequest().body(
+                        "{\"FhirResponseCode\":${response.statusCode}, \"FhirResponseError\":\"${response.text}\"}"
+                )
+            }
+        }
     }
 }
