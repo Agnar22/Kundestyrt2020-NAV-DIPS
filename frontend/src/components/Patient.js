@@ -70,7 +70,7 @@ export default class Patient extends React.Component {
       });
   }
 
-  formData() {
+  formData = () => {
     const fhirclient = this.context.client;
     fhirclient.request(`https://r3.smarthealthit.org/QuestionnaireResponse/_search?questionnaire=235126&patient=${fhirclient.patient.id}&status=in-progress`)
       .then((result) => {
@@ -154,13 +154,13 @@ export default class Patient extends React.Component {
   handleSave = (event, status) => {
     event.preventDefault();
     this.saveAndSendToFHIR(status)
-    .then((response) => {
-      this.setState({ responseID: response.id });
-    })
-    .then(console.log('Successfully saved form to FHIR'))
-    .catch((e) => {
-      console.log('Error loading formData: ', e);
-    });
+      .then((response) => {
+        this.setState({ responseID: response.id });
+      })
+      .then(console.log('Successfully saved form to FHIR'))
+      .catch((e) => {
+        console.log('Error loading formData: ', e);
+      });
   }
 
   // Function for saving patient information form to FHIR with status completed
@@ -191,7 +191,7 @@ export default class Patient extends React.Component {
           <PatientName name={patient.name} />
           <PatientSocialSecurityNumber identifier={patient.identifier} />
         </div>
-        <form className="patientform" onSubmit={e => this.handleSubmit(e, 'completed')}>
+        <form className="patientform" onSubmit={(e) => this.handleSubmit(e, 'completed')}>
           <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0} />
           <div className="datepicker-wrapper">
             <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale="nb">
@@ -224,7 +224,7 @@ export default class Patient extends React.Component {
             </MuiPickersUtilsProvider>
           </div>
           <div className="button-wrapper">
-            <Hovedknapp className="button" onClick={e => this.handleSave(e, 'in-progress')}>Lagre</Hovedknapp>
+            <Hovedknapp className="button" onClick={(e) => this.handleSave(e, 'in-progress')}>Lagre</Hovedknapp>
             <Hovedknapp className="button" htmlType="submit">Send</Hovedknapp>
           </div>
         </form>
