@@ -72,12 +72,14 @@ export default class Patient extends React.Component {
 
   formData = () => {
     const fhirclient = this.context.client;
-    fhirclient.request(`https://r3.smarthealthit.org/QuestionnaireResponse/_search?questionnaire=235126&patient=${fhirclient.patient.id}&status=in-progress`)
+    fhirclient.request(`http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/_search?questionnaire=235126&patient=${fhirclient.patient.id}&status=in-progress`)
       .then((result) => {
         if (result.total === 0) { return; }
+        //TODO: Fix bug with missing date when textfield is empty on save.
         this.setState({ responseID: result.entry[0].resource.id });
-        this.setState({ value: result.entry[0].resource.item[4].answer[0].valueString });
-
+        if (typeof (result.entry[0].resource.item[4].answer) !== 'undefined') {
+          this.setState({value: result.entry[0].resource.item[4].answer[0].valueString});
+        }
         if (typeof (result.entry[0].resource.item[2].answer) !== 'undefined') {
           this.setState({ startDate: result.entry[0].resource.item[2].answer[0].valueString });
         }
@@ -132,7 +134,7 @@ export default class Patient extends React.Component {
     // Patient has no existing QuestionnairyResponse and a new one is created
     if (this.state.responseID === null) {
       options = {
-        url: 'https://r3.smarthealthit.org/QuestionnaireResponse',
+        url: 'http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse',
         body: JSON.stringify(filledResponse),
         headers,
         method: 'POST',
@@ -141,7 +143,7 @@ export default class Patient extends React.Component {
       // Patient has previously excisting QuestionnairyResponse
       filledResponse.id = this.state.responseID;
       options = {
-        url: `https://r3.smarthealthit.org/QuestionnaireResponse/${this.state.responseID}`,
+        url: `http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/${this.state.responseID}`,
         body: JSON.stringify(filledResponse),
         headers,
         method: 'PUT',
