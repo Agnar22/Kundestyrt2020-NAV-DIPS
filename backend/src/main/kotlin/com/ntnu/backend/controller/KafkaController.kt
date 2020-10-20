@@ -25,7 +25,7 @@ class KafkaController(val kafkaTemplate: KafkaTemplate<String, String>, properti
         val response = khttp.get("http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/${questionnaireResponseId}", headers = mapOf("Authorization" to token, "Content-Type" to "application/fhir-json"))
         return when (response.statusCode) {
             200 -> {
-                kafkaTemplate.send(topic, response.jsonObject.toString())
+                kafkaTemplate.send(topic, response.text)
                 ResponseEntity.ok("Published application!")
             }
             else -> {
