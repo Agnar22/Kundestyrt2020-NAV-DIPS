@@ -12,6 +12,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.20.0",
     "classnames": "^2.2.6",
     "craco-less": "^1.17.0",
     "date-fns": "^2.16.1",

@@ -12,6 +12,8 @@ import 'moment/locale/nb';
 import MomentUtils from '@date-io/moment';
 import QuestionnaireResponseTemplate from '../QuestionnaireResponseTemplate.json';
 import FhirClientContext from '../FhirClientContext';
+import axios from 'axios';
+
 
 moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
 
@@ -163,6 +165,7 @@ export default class Patient extends React.Component {
       .catch((e) => {
         console.log('Error loading formData: ', e);
       });
+    console.log(this.state.responseID)
   }
 
   // Function for saving patient information form to FHIR with status completed
@@ -170,7 +173,31 @@ export default class Patient extends React.Component {
   handleSubmit = (event, status) => {
     this.handleSave(event, status);
     // TODO: Send information in form to backend (kafka)
-  }
+
+    const token = this.context.client.state.tokenResponse.access_token;
+    console.log("Token:\t" +  token);
+
+    const ID = this.state.responseID;
+    console.log("Data:\t" +  ID);
+
+    const config = {
+      headers: {
+        Authorization : "Bearer " + token,
+      }
+    }
+    console.log('http://localhost:8081/send-application', {data: ID}, config)
+    const axios = require('axios');
+    axios.post('http://localhost:8081/send-application', {data: ID}, config)
+        .then((res) => {
+              console.log(`Status code: ${res.status}`);
+              console.log(`Status text: ${res.statusText}`);
+              console.log(`Request method: ${res.request.method}`);
+              console.log(`Path: ${res.request.path}` + "\n\n");
+
+              console.log(`Date: ${res.headers.date}`);
+              console.log(`Data: ${res.data}`);
+        });
+    }
 
   handleChange = (event) => {
     this.setState({ value: event.target.value });
