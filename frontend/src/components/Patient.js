@@ -129,7 +129,8 @@ export default class Patient extends React.Component {
 
     // Function for saving the information in our form to FHIR and sending it to Kafka-stream
     handleSubmit = (event) => {
-      event.preventDefault();
+      // Call save-method to save the information to FHIR
+      this.handleSave(event);
 
       const fhirclient = this.context.client;
 
