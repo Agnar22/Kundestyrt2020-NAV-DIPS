@@ -20,8 +20,10 @@ class KafkaController(val kafkaTemplate: KafkaTemplate<String, String>, properti
 
     @PostMapping("/send-application")
     @ResponseStatus(HttpStatus.CREATED)
-    fun sendApplication(@RequestBody application: String): String {
-        kafkaTemplate.send(topic, "Application with content: ${application}")
-        return "Published application with content ${application}."
+    fun sendApplication(@RequestHeader(name="Authorization") token: String, @RequestBody questionnaireResponseId: String): String {
+        println("Used token ${token}.")
+        val response = khttp.get("http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/${questionnaireResponseId}", headers = mapOf("Authorization" to token, "Content-Type" to "application/fhir-json"))
+        kafkaTemplate.send(topic, "Application with content: ${response.jsonObject}")
+        return "Published application with content ${response.jsonObject}."
     }
 }
