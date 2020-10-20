@@ -70,6 +70,30 @@ export default class Patient extends React.Component {
       });
   }
 
+  formData() {
+    const fhirclient = this.context.client;
+    fhirclient.request(`https://r3.smarthealthit.org/QuestionnaireResponse/_search?questionnaire=235126&patient=${fhirclient.patient.id}&status=in-progress`)
+      .then((result) => {
+        if (result.total === 0) { return; }
+        this.setState({ responseID: result.entry[0].resource.id });
+        this.setState({ value: result.entry[0].resource.item[4].answer[0].valueString });
+
+        if (typeof (result.entry[0].resource.item[2].answer) !== 'undefined') {
+          this.setState({ startDate: result.entry[0].resource.item[2].answer[0].valueString });
+        } else {
+          this.setState({ startDate: '' });
+        }
+
+        if (typeof (result.entry[0].resource.item[3].answer) !== 'undefined') {
+          this.setState({ endDate: result.entry[0].resource.item[3].answer[0].valueString });
+        } else {
+          this.setState({ endDate: '' });
+        }
+      }).catch((e) => {
+        console.log('Error loading formData: ', e);
+      });
+  }
+
   // Gets QuestionnaireResponseTemplate.json and fills out with current patients information,
   // before returning the form.
   convertToQuestionnaire = (status) => {
@@ -96,14 +120,9 @@ export default class Patient extends React.Component {
     return responseForm;
   }
 
-  handleChange = (event) => {
-    this.setState({ value: event.target.value });
-  }
-
   // Function for saving the information in our form to FHIR
   saveAndSendToFHIR = (status) => {
     const filledResponse = this.convertToQuestionnaire(status);
-    console.log(filledResponse);
 
     const fhirclient = this.context.client;
 
@@ -114,7 +133,7 @@ export default class Patient extends React.Component {
 
     let options = null;
 
-    // Patient has no exsiting QuestionnairyResponse and a new one is created
+    // Patient has no existing QuestionnairyResponse and a new one is created
     if (this.state.responseID === null) {
       options = {
         url: 'https://r3.smarthealthit.org/QuestionnaireResponse',
@@ -136,49 +155,27 @@ export default class Patient extends React.Component {
   }
 
   // Function for saving patient information form to FHIR with status in progress
-  handleSave = (event) => {
+  handleSave = (event, status) => {
     event.preventDefault();
-    this.saveAndSendToFHIR('in-progress').then((response) => {
+    this.saveAndSendToFHIR(status)
+    .then((response) => {
       this.setState({ responseID: response.id });
-    }).catch((e) => {
+    })
+    .then(console.log('Successfully saved form to FHIR'))
+    .catch((e) => {
       console.log('Error loading formData: ', e);
     });
   }
 
   // Function for saving patient information form to FHIR with status completed
   // and sending it to Kafka-stream
-  handleSubmit = (event) => {
-    event.preventDefault();
-    this.saveAndSendToFHIR('completed').then((response) => {
-      this.setState({ responseID: response.id });
-      // TODO: Send information in form to backend (kafka)
-    }).catch((e) => {
-      console.log('Error loading formData: ', e);
-    });
+  handleSubmit = (event, status) => {
+    this.handleSave(event, status);
+    // TODO: Send information in form to backend (kafka)
   }
 
-  formData() {
-    const fhirclient = this.context.client;
-    fhirclient.request(`https://r3.smarthealthit.org/QuestionnaireResponse/_search?questionnaire=235126&patient=${fhirclient.patient.id}&status=in-progress`)
-      .then((result) => {
-        if (result.total === 0) { return; }
-        this.setState({ responseID: result.entry[0].resource.id });
-        this.setState({ value: result.entry[0].resource.item[4].answer[0].valueString });
-
-        if (typeof (result.entry[0].resource.item[2].answer) !== 'undefined') {
-          this.setState({ startDate: result.entry[0].resource.item[2].answer[0].valueString });
-        } else {
-          this.setState({ startDate: '' });
-        }
-
-        if (typeof (result.entry[0].resource.item[3].answer) !== 'undefined') {
-          this.setState({ endDate: result.entry[0].resource.item[3].answer[0].valueString });
-        } else {
-          this.setState({ endDate: '' });
-        }
-      }).catch((e) => {
-        console.log('Error loading formData: ', e);
-      });
+  handleChange = (event) => {
+    this.setState({ value: event.target.value });
   }
 
   /* eslint-disable react/jsx-props-no-spreading */
@@ -198,7 +195,7 @@ export default class Patient extends React.Component {
           <PatientName name={patient.name} />
           <PatientSocialSecurityNumber identifier={patient.identifier} />
         </div>
-        <form className="patientform" onSubmit={this.handleSubmit}>
+        <form className="patientform" onSubmit={e => this.handleSubmit(e, 'completed')}>
           <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0} />
           <div className="datepicker-wrapper">
             <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale="nb">
@@ -231,7 +228,7 @@ export default class Patient extends React.Component {
             </MuiPickersUtilsProvider>
           </div>
           <div className="button-wrapper">
-            <Hovedknapp className="button" onClick={this.handleSave}>Lagre</Hovedknapp>
+            <Hovedknapp className="button" onClick={e => this.handleSave(e, 'in-progress')}>Lagre</Hovedknapp>
             <Hovedknapp className="button" htmlType="submit">Send</Hovedknapp>
           </div>
         </form>
