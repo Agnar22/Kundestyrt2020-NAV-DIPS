@@ -10,8 +10,10 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import moment from 'moment';
 import 'moment/locale/nb';
 import MomentUtils from '@date-io/moment';
+import AlertStripe from 'nav-frontend-alertstriper';
 import QuestionnaireResponseTemplate from '../QuestionnaireResponseTemplate.json';
 import FhirClientContext from '../FhirClientContext';
+
 
 moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
 
@@ -54,6 +56,8 @@ export default class Patient extends React.Component {
       endDate: null,
       responseID: null,
       error: null,
+      sucessfullSave: false,
+      sucessfullSend: false
     };
   }
 
@@ -72,7 +76,7 @@ export default class Patient extends React.Component {
 
   formData = () => {
     const fhirclient = this.context.client;
-    fhirclient.request(`https://r3.smarthealthit.org/QuestionnaireResponse/_search?questionnaire=235126&patient=${fhirclient.patient.id}&status=in-progress`)
+    fhirclient.request(`https://r3.smarthealthit.org/QuestionnaireResponse/_search?questionnaire=235192&patient=${fhirclient.patient.id}&status=in-progress`)
       .then((result) => {
         if (result.total === 0) { return; }
         this.setState({ responseID: result.entry[0].resource.id });
@@ -156,9 +160,13 @@ export default class Patient extends React.Component {
     this.saveAndSendToFHIR(status)
       .then((response) => {
         this.setState({ responseID: response.id });
-      })
-      .then(console.log('Successfully saved form to FHIR'))
-      .catch((e) => {
+        if(status === "completed"){
+          this.setState({sucessfullSend: true});
+        }
+        else if (status === "in-progress"){
+          this.setState({sucessfullSave: true});
+        }
+      }).catch((e) => {
         console.log('Error loading formData: ', e);
       });
   }
@@ -172,6 +180,9 @@ export default class Patient extends React.Component {
 
   handleChange = (event) => {
     this.setState({ value: event.target.value });
+    //Removes popup
+    this.setState({sucessfullSave: false, 
+    sucessfullSend: false});
   }
 
   /* eslint-disable react/jsx-props-no-spreading */
@@ -184,9 +195,23 @@ export default class Patient extends React.Component {
       return <p>{error.message}</p>;
     }
 
+    var A;
+    if(this.state.sucessfullSave){
+      A = <AlertStripe type="suksess">
+        Skjemaet ble lagret!
+      </AlertStripe>
+    }else if (this.state.sucessfullSend){
+      A = <AlertStripe type="suksess">
+        Skjemaet ble sendt!
+      </AlertStripe>
+    }
+
     return (
       <div className="form-wrapper">
         <h1> Erklæring om pleiepenger</h1>
+        <div id="popup" aria-live="polite">
+          {A}
+        </div>
         <div className="banner-wrapper">
           <PatientName name={patient.name} />
           <PatientSocialSecurityNumber identifier={patient.identifier} />
@@ -206,7 +231,8 @@ export default class Patient extends React.Component {
                 maxDateMessage="Starten av perioden kan ikke være senere enn slutten av perioden"
                 invalidDateMessage="Ugyldig datoformat"
                 value={this.state.startDate}
-                onChange={(d) => this.setState({ startDate: d })}
+                onChange={(d) => this.setState({ startDate: d, sucessfullSave: false, 
+                  sucessfullSend: false})}
               />
               <KeyboardDatePicker
                 className="datepicker"
@@ -219,7 +245,8 @@ export default class Patient extends React.Component {
                 minDateMessage="Slutten av perioden kan ikke være tidligere enn starten av perioden"
                 invalidDateMessage="Ugyldig datoformat"
                 value={this.state.endDate}
-                onChange={(d) => this.setState({ endDate: d })}
+                onChange={(d) => this.setState({ endDate: d, sucessfullSave: false, 
+                  sucessfullSend: false})}
               />
             </MuiPickersUtilsProvider>
           </div>
