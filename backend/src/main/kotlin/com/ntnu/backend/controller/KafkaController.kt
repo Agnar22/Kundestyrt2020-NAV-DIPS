@@ -23,9 +23,11 @@ class KafkaController(val kafkaTemplate: KafkaTemplate<String, String>, properti
     @CrossOrigin
     @PostMapping("/send-application")
     @ResponseStatus(HttpStatus.CREATED)
-    fun sendApplication(@RequestHeader(name="Authorization") token: String, @RequestBody body: JSONObject): ResponseEntity<String> {
-        println("${token} ${body}")
-        val response = khttp.get("http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/${body.getString("data")}", headers = mapOf("Authorization" to token, "Content-Type" to "application/fhir-json"))
+    fun sendApplication(@RequestHeader(name="Authorization") token: String, @RequestBody body: String): ResponseEntity<String> {
+        val b1 = body.dropLast(1)
+        println("Token:${token}")
+        println("B1:${b1}")
+        val response = khttp.get("http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/${b1}", headers = mapOf("Authorization" to token, "Content-Type" to "application/fhir-json"))
         return when (response.statusCode) {
             200 -> {
                 kafkaTemplate.send(topic, response.text)

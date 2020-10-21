@@ -116,7 +116,7 @@ export default class Patient extends React.Component {
 
     // Sets the status of the QuestionnaireResponse-form to the functions argument
     responseForm.status = status;
-
+    console.log(responseForm);
     return responseForm;
   }
 
@@ -176,7 +176,6 @@ export default class Patient extends React.Component {
 
     const token = this.context.client.state.tokenResponse.access_token;
     console.log("Token:\t" +  token);
-
     const ID = this.state.responseID;
     console.log("Data:\t" +  ID);
 
@@ -185,17 +184,12 @@ export default class Patient extends React.Component {
         Authorization : "Bearer " + token,
       }
     }
-    console.log('http://localhost:8081/send-application', {data: ID}, config)
+    console.log('http://localhost:8081/send-application', ID, config)
+
     const axios = require('axios');
-    axios.post('http://localhost:8081/send-application', {data: ID}, config)
+    axios.post('http://localhost:8081/send-application',  ID, config)
         .then((res) => {
               console.log(`Status code: ${res.status}`);
-              console.log(`Status text: ${res.statusText}`);
-              console.log(`Request method: ${res.request.method}`);
-              console.log(`Path: ${res.request.path}` + "\n\n");
-
-              console.log(`Date: ${res.headers.date}`);
-              console.log(`Data: ${res.data}`);
         });
     }
 
