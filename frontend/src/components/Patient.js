@@ -13,9 +13,10 @@ import MomentUtils from '@date-io/moment';
 import AlertStripe from 'nav-frontend-alertstriper';
 import QuestionnaireResponseTemplate from '../QuestionnaireResponseTemplate.json';
 import FhirClientContext from '../FhirClientContext';
-import axios from 'axios';
 
 moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
+
+const axios = require('axios');
 
 const QUESTIONNAIRE_ID = 235192;
 
@@ -59,7 +60,7 @@ export default class Patient extends React.Component {
       responseID: null,
       error: null,
       sucessfullSave: false,
-      sucessfullSend: false
+      sucessfullSend: false,
     };
   }
 
@@ -83,7 +84,7 @@ export default class Patient extends React.Component {
         if (result.total === 0) { return; }
         this.setState({ responseID: result.entry[0].resource.id });
         if (typeof (result.entry[0].resource.item[4].answer) !== 'undefined') {
-          this.setState({value: result.entry[0].resource.item[4].answer[0].valueString});
+          this.setState({ value: result.entry[0].resource.item[4].answer[0].valueString });
         }
         if (typeof (result.entry[0].resource.item[2].answer) !== 'undefined') {
           this.setState({ startDate: result.entry[0].resource.item[2].answer[0].valueString });
@@ -160,8 +161,8 @@ export default class Patient extends React.Component {
     this.saveAndSendToFHIR(status)
       .then((response) => {
         this.setState({ responseID: response.id });
-        if (status === "in-progress"){
-          this.setState({sucessfullSave: true});
+        if (status === 'in-progress') {
+          this.setState({ sucessfullSave: true });
         }
       }).catch((e) => {
         console.log('Error loading formData: ', e);
@@ -177,17 +178,16 @@ export default class Patient extends React.Component {
     const ID = this.state.responseID;
     const config = {
       headers: {
-        Authorization : "Bearer " + token,
-      }
-    }
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-    const axios = require('axios');
-    axios.post('http://localhost:8081/send-application',  ID, config)
+    axios.post('http://localhost:8081/send-application', ID, config)
       .then((res) => {
-        if (res.status === 200){
+        if (res.status === 200) {
           this.setState({
-            sucessfullSend : true,
-            sucessfullSave : false
+            sucessfullSend: true,
+            sucessfullSave: false,
           });
         } else {
           console.log('Error sending information to backend, status code:', res.status);
@@ -197,9 +197,11 @@ export default class Patient extends React.Component {
 
   handleChange = (event) => {
     this.setState({ value: event.target.value });
-    //Removes popup
-    this.setState({sucessfullSave: false, 
-    sucessfullSend: false});
+    // Removes popup
+    this.setState({
+      sucessfullSave: false,
+      sucessfullSend: false,
+    });
   }
 
   /* eslint-disable react/jsx-props-no-spreading */
@@ -212,16 +214,20 @@ export default class Patient extends React.Component {
       return <p>{error.message}</p>;
     }
 
-    var A;
-    if(this.state.sucessfullSave){
-      A = <AlertStripe type="suksess">
-        Skjemaet ble lagret!
-      </AlertStripe>
+    let A;
+    if (this.state.sucessfullSave) {
+      A = (
+        <AlertStripe type="suksess">
+          Skjemaet ble lagret!
+        </AlertStripe>
+      );
     }
-    if (this.state.sucessfullSend){
-      A = <AlertStripe type="suksess">
-        Skjemaet ble lagret og sendt!
-      </AlertStripe>
+    if (this.state.sucessfullSend) {
+      A = (
+        <AlertStripe type="suksess">
+          Skjemaet ble lagret og sendt!
+        </AlertStripe>
+      );
     }
 
     return (
@@ -232,7 +238,7 @@ export default class Patient extends React.Component {
           <PatientSocialSecurityNumber identifier={patient.identifier} />
         </div>
         <form className="patientform" onSubmit={(e) => this.handleSubmit(e, 'completed')}>
-          <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0} disabled={this.state.sucessfullSend}/>
+          <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0} disabled={this.state.sucessfullSend} />
           <div className="datepicker-wrapper">
             <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale="nb">
               <KeyboardDatePicker
@@ -246,10 +252,13 @@ export default class Patient extends React.Component {
                 maxDateMessage="Starten av perioden kan ikke være senere enn slutten av perioden"
                 invalidDateMessage="Ugyldig datoformat"
                 value={this.state.startDate}
-                onChange={(d) => this.setState({ startDate: d, sucessfullSave: false, 
-                  sucessfullSend: false})}
+                onChange={(d) => this.setState({
+                  startDate: d,
+                  sucessfullSave: false,
+                  sucessfullSend: false,
+                })}
                 disabled={this.state.sucessfullSend}
-                />
+              />
               <KeyboardDatePicker
                 className="datepicker"
                 disableToolbar
@@ -261,8 +270,11 @@ export default class Patient extends React.Component {
                 minDateMessage="Slutten av perioden kan ikke være tidligere enn starten av perioden"
                 invalidDateMessage="Ugyldig datoformat"
                 value={this.state.endDate}
-                onChange={(d) => this.setState({ endDate: d, sucessfullSave: false, 
-                  sucessfullSend: false})}
+                onChange={(d) => this.setState({
+                  endDate: d,
+                  sucessfullSave: false,
+                  sucessfullSend: false,
+                })}
                 disabled={this.state.sucessfullSend}
               />
             </MuiPickersUtilsProvider>
@@ -270,7 +282,7 @@ export default class Patient extends React.Component {
           <div id="popup" aria-live="polite">
             {A}
           </div>
-          <br/>
+          <br />
           <div className="button-wrapper">
             <Hovedknapp className="button" onClick={(e) => this.handleSave(e, 'in-progress')}>Lagre</Hovedknapp>
             <Hovedknapp className="button" htmlType="submit" disabled={this.state.sucessfullSend}>Send</Hovedknapp>
