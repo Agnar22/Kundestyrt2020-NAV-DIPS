@@ -233,7 +233,7 @@ export default class Patient extends React.Component {
           <PatientSocialSecurityNumber identifier={patient.identifier} />
         </div>
         <form className="patientform" onSubmit={(e) => this.handleSubmit(e, 'completed')}>
-          <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0} />
+          <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0} disabled={this.state.sucessfullSend}/>
           <div className="datepicker-wrapper">
             <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale="nb">
               <KeyboardDatePicker
@@ -249,7 +249,8 @@ export default class Patient extends React.Component {
                 value={this.state.startDate}
                 onChange={(d) => this.setState({ startDate: d, sucessfullSave: false, 
                   sucessfullSend: false})}
-              />
+                disabled={this.state.sucessfullSend}
+                />
               <KeyboardDatePicker
                 className="datepicker"
                 disableToolbar
@@ -263,12 +264,13 @@ export default class Patient extends React.Component {
                 value={this.state.endDate}
                 onChange={(d) => this.setState({ endDate: d, sucessfullSave: false, 
                   sucessfullSend: false})}
+                disabled={this.state.sucessfullSend}
               />
             </MuiPickersUtilsProvider>
           </div>
           <div className="button-wrapper">
             <Hovedknapp className="button" onClick={(e) => this.handleSave(e, 'in-progress')}>Lagre</Hovedknapp>
-            <Hovedknapp className="button" htmlType="submit">Send</Hovedknapp>
+            <Hovedknapp className="button" htmlType="submit" disabled={this.state.sucessfullSend}>Send</Hovedknapp>
           </div>
         </form>
       </div>
