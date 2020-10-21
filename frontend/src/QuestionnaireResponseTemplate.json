@@ -1,0 +1,58 @@
+{
+    "resourceType": "QuestionnaireResponse",
+    "questionnaire": {"reference": "Questionnaire/235192"},
+    "status": "",
+    "authored": "2020-10-13T08:21:10.916Z",
+    "author": { "reference":""},
+    "item": [
+        {
+            "linkId": "spm_navn",
+            "text": "Navn",
+            "answer": [
+                {
+                    "valueString": ""
+                }
+            ]
+        },
+        {
+            "linkId": "spm_personnummer",
+            "text": "Personnummer",
+            "answer": [
+                {
+                    "valueString": ""
+                }
+            ]
+        },
+        {
+            "linkId": "spm_dato_fra",
+            "text": "Dato fra",
+            "answer": [
+                {
+                    "valueString": ""
+                }
+            ]
+        },
+        {
+            "linkId": "spm_dato_til",
+            "text": "Dato til",
+            "answer": [
+                {
+                    "valueString": ""
+                }
+            ]
+        },
+        {
+            "linkId": "spm_notater",
+            "text": "Notater",
+            "answer": [
+                {
+                    "valueString": ""
+                }
+            ]
+        }
+    ],
+    "subject": {
+        "reference": "",
+        "display": ""
+    }
+}

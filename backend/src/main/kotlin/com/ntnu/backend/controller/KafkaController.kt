@@ -1,7 +1,9 @@
 package com.ntnu.backend.controller
 
+import org.json.JSONObject
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.web.bind.annotation.*
 
@@ -18,10 +20,30 @@ class KafkaController(val kafkaTemplate: KafkaTemplate<String, String>, properti
         return "Published successfully";
     }
 
+    @CrossOrigin
     @PostMapping("/send-application")
     @ResponseStatus(HttpStatus.CREATED)
-    fun sendApplication(@RequestBody application: String): String {
-        kafkaTemplate.send(topic, "Application with content: ${application}")
-        return "Published application with content ${application}."
+    fun sendApplication(@RequestHeader(name="Authorization") token: String, @RequestBody body: String): ResponseEntity<String> {
+        // The frontend sometimes sends the body with a '='-suffix, this has to be removed.
+        // The line below is a temporary fix for this problem.
+        val questionnaireResponseId = if (body.takeLast(1) == "=") body.dropLast((1)) else body
+        val response = khttp.get(
+            url= "http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/${questionnaireResponseId}",
+            headers = mapOf(
+                    "Authorization" to token,
+                    "Content-Type" to "application/fhir-json"
+            )
+        )
+        return when (response.statusCode) {
+            200 -> {
+                kafkaTemplate.send(topic, response.text)
+                ResponseEntity.ok("Published application!")
+            }
+            else -> {
+                ResponseEntity.badRequest().body(
+                        "{\"FhirResponseCode\":${response.statusCode}, \"FhirResponseError\":\"${response.text}\"}"
+                )
+            }
+        }
     }
 }
