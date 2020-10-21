@@ -10,10 +10,15 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import moment from 'moment';
 import 'moment/locale/nb';
 import MomentUtils from '@date-io/moment';
+import AlertStripe from 'nav-frontend-alertstriper';
 import QuestionnaireResponseTemplate from '../QuestionnaireResponseTemplate.json';
 import FhirClientContext from '../FhirClientContext';
 
 moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
+
+const axios = require('axios');
+
+const QUESTIONNAIRE_ID = 235192;
 
 function PatientName({ name = [] }) {
   const entry = name.find((nameRecord) => nameRecord.use === 'official') || name[0];
@@ -54,6 +59,8 @@ export default class Patient extends React.Component {
       endDate: null,
       responseID: null,
       error: null,
+      sucessfullSave: false,
+      sucessfullSend: false,
     };
   }
 
@@ -72,12 +79,13 @@ export default class Patient extends React.Component {
 
   formData = () => {
     const fhirclient = this.context.client;
-    fhirclient.request(`https://r3.smarthealthit.org/QuestionnaireResponse/_search?questionnaire=235126&patient=${fhirclient.patient.id}&status=in-progress`)
+    fhirclient.request(`http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/_search?questionnaire=${QUESTIONNAIRE_ID}&patient=${fhirclient.patient.id}&status=in-progress`)
       .then((result) => {
         if (result.total === 0) { return; }
         this.setState({ responseID: result.entry[0].resource.id });
-        this.setState({ value: result.entry[0].resource.item[4].answer[0].valueString });
-
+        if (typeof (result.entry[0].resource.item[4].answer) !== 'undefined') {
+          this.setState({ value: result.entry[0].resource.item[4].answer[0].valueString });
+        }
         if (typeof (result.entry[0].resource.item[2].answer) !== 'undefined') {
           this.setState({ startDate: result.entry[0].resource.item[2].answer[0].valueString });
         }
@@ -112,7 +120,6 @@ export default class Patient extends React.Component {
 
     // Sets the status of the QuestionnaireResponse-form to the functions argument
     responseForm.status = status;
-
     return responseForm;
   }
 
@@ -121,18 +128,16 @@ export default class Patient extends React.Component {
     const filledResponse = this.convertToQuestionnaire(status);
 
     const fhirclient = this.context.client;
-
     const headers = {
       'Content-Type': 'application/fhir+json',
       Accept: '*/*',
     };
-
-    let options = null;
+    let options;
 
     // Patient has no existing QuestionnairyResponse and a new one is created
     if (this.state.responseID === null) {
       options = {
-        url: 'https://r3.smarthealthit.org/QuestionnaireResponse',
+        url: 'http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse',
         body: JSON.stringify(filledResponse),
         headers,
         method: 'POST',
@@ -141,7 +146,7 @@ export default class Patient extends React.Component {
       // Patient has previously excisting QuestionnairyResponse
       filledResponse.id = this.state.responseID;
       options = {
-        url: `https://r3.smarthealthit.org/QuestionnaireResponse/${this.state.responseID}`,
+        url: `http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/${this.state.responseID}`,
         body: JSON.stringify(filledResponse),
         headers,
         method: 'PUT',
@@ -156,9 +161,10 @@ export default class Patient extends React.Component {
     this.saveAndSendToFHIR(status)
       .then((response) => {
         this.setState({ responseID: response.id });
-      })
-      .then(console.log('Successfully saved form to FHIR'))
-      .catch((e) => {
+        if (status === 'in-progress') {
+          this.setState({ sucessfullSave: true });
+        }
+      }).catch((e) => {
         console.log('Error loading formData: ', e);
       });
   }
@@ -167,11 +173,35 @@ export default class Patient extends React.Component {
   // and sending it to Kafka-stream
   handleSubmit = (event, status) => {
     this.handleSave(event, status);
-    // TODO: Send information in form to backend (kafka)
+
+    const token = this.context.client.state.tokenResponse.access_token;
+    const ID = this.state.responseID;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios.post('http://localhost:8081/send-application', ID, config)
+      .then((res) => {
+        if (res.status === 200) {
+          this.setState({
+            sucessfullSend: true,
+            sucessfullSave: false,
+          });
+        } else {
+          console.log('Error sending information to backend, status code:', res.status);
+        }
+      });
   }
 
   handleChange = (event) => {
     this.setState({ value: event.target.value });
+    // Removes popup
+    this.setState({
+      sucessfullSave: false,
+      sucessfullSend: false,
+    });
   }
 
   /* eslint-disable react/jsx-props-no-spreading */
@@ -184,6 +214,22 @@ export default class Patient extends React.Component {
       return <p>{error.message}</p>;
     }
 
+    let A;
+    if (this.state.sucessfullSave) {
+      A = (
+        <AlertStripe type="suksess">
+          Skjemaet ble lagret!
+        </AlertStripe>
+      );
+    }
+    if (this.state.sucessfullSend) {
+      A = (
+        <AlertStripe type="suksess">
+          Skjemaet ble lagret og sendt!
+        </AlertStripe>
+      );
+    }
+
     return (
       <div className="form-wrapper">
         <h1> Erklæring om pleiepenger</h1>
@@ -192,7 +238,7 @@ export default class Patient extends React.Component {
           <PatientSocialSecurityNumber identifier={patient.identifier} />
         </div>
         <form className="patientform" onSubmit={(e) => this.handleSubmit(e, 'completed')}>
-          <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0} />
+          <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0} disabled={this.state.sucessfullSend} />
           <div className="datepicker-wrapper">
             <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale="nb">
               <KeyboardDatePicker
@@ -206,7 +252,12 @@ export default class Patient extends React.Component {
                 maxDateMessage="Starten av perioden kan ikke være senere enn slutten av perioden"
                 invalidDateMessage="Ugyldig datoformat"
                 value={this.state.startDate}
-                onChange={(d) => this.setState({ startDate: d })}
+                onChange={(d) => this.setState({
+                  startDate: d,
+                  sucessfullSave: false,
+                  sucessfullSend: false,
+                })}
+                disabled={this.state.sucessfullSend}
               />
               <KeyboardDatePicker
                 className="datepicker"
@@ -219,13 +270,22 @@ export default class Patient extends React.Component {
                 minDateMessage="Slutten av perioden kan ikke være tidligere enn starten av perioden"
                 invalidDateMessage="Ugyldig datoformat"
                 value={this.state.endDate}
-                onChange={(d) => this.setState({ endDate: d })}
+                onChange={(d) => this.setState({
+                  endDate: d,
+                  sucessfullSave: false,
+                  sucessfullSend: false,
+                })}
+                disabled={this.state.sucessfullSend}
               />
             </MuiPickersUtilsProvider>
           </div>
+          <div id="popup" aria-live="polite">
+            {A}
+          </div>
+          <br />
           <div className="button-wrapper">
             <Hovedknapp className="button" onClick={(e) => this.handleSave(e, 'in-progress')}>Lagre</Hovedknapp>
-            <Hovedknapp className="button" htmlType="submit">Send</Hovedknapp>
+            <Hovedknapp className="button" htmlType="submit" disabled={this.state.sucessfullSend}>Send</Hovedknapp>
           </div>
         </form>
       </div>
