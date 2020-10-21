@@ -17,6 +17,8 @@ import axios from 'axios';
 
 moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
 
+const QUESTIONNAIRE_ID = 235192;
+
 function PatientName({ name = [] }) {
   const entry = name.find((nameRecord) => nameRecord.use === 'official') || name[0];
   if (!entry) {
@@ -74,7 +76,7 @@ export default class Patient extends React.Component {
 
   formData = () => {
     const fhirclient = this.context.client;
-    fhirclient.request(`http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/_search?questionnaire=235126&patient=${fhirclient.patient.id}&status=in-progress`)
+    fhirclient.request(`http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/_search?questionnaire=${QUESTIONNAIRE_ID}&patient=${fhirclient.patient.id}&status=in-progress`)
       .then((result) => {
         if (result.total === 0) { return; }
         //TODO: Fix bug with missing date when textfield is empty on save.
