@@ -119,7 +119,6 @@ export default class Patient extends React.Component {
 
     // Sets the status of the QuestionnaireResponse-form to the functions argument
     responseForm.status = status;
-    console.log(responseForm);
     return responseForm;
   }
 
@@ -167,7 +166,6 @@ export default class Patient extends React.Component {
       }).catch((e) => {
         console.log('Error loading formData: ', e);
       });
-    console.log(this.state.responseID)
   }
 
   // Function for saving patient information form to FHIR with status completed
@@ -191,7 +189,7 @@ export default class Patient extends React.Component {
             successfullSend : true
           });
         } else {
-          console.error('Error sending information to backend, status code:', res.status);
+          console.log('Error sending information to backend, status code:', res.status);
         }
       });
   }
