@@ -79,7 +79,6 @@ export default class Patient extends React.Component {
     fhirclient.request(`http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/_search?questionnaire=${QUESTIONNAIRE_ID}&patient=${fhirclient.patient.id}&status=in-progress`)
       .then((result) => {
         if (result.total === 0) { return; }
-        //TODO: Fix bug with missing date when textfield is empty on save.
         this.setState({ responseID: result.entry[0].resource.id });
         if (typeof (result.entry[0].resource.item[4].answer) !== 'undefined') {
           this.setState({value: result.entry[0].resource.item[4].answer[0].valueString});
@@ -127,13 +126,11 @@ export default class Patient extends React.Component {
     const filledResponse = this.convertToQuestionnaire(status);
 
     const fhirclient = this.context.client;
-
     const headers = {
       'Content-Type': 'application/fhir+json',
       Accept: '*/*',
     };
-
-    let options = null;
+    let options;
 
     // Patient has no existing QuestionnairyResponse and a new one is created
     if (this.state.responseID === null) {
@@ -174,26 +171,25 @@ export default class Patient extends React.Component {
   // and sending it to Kafka-stream
   handleSubmit = (event, status) => {
     this.handleSave(event, status);
-    // TODO: Send information in form to backend (kafka)
 
     const token = this.context.client.state.tokenResponse.access_token;
-    console.log("Token:\t" +  token);
     const ID = this.state.responseID;
-    console.log("Data:\t" +  ID);
-
     const config = {
       headers: {
         Authorization : "Bearer " + token,
       }
     }
-    console.log('http://localhost:8081/send-application', ID, config)
 
     const axios = require('axios');
     axios.post('http://localhost:8081/send-application',  ID, config)
-        .then((res) => {
-              console.log(`Status code: ${res.status}`);
-        });
-    }
+      .then((res) => {
+        if (res.status == 200){
+          console.log('Her kommer det banner');
+        } else {
+          console.error('Error sending information to backend, status code:', res.status);
+        }
+      });
+  }
 
   handleChange = (event) => {
     this.setState({ value: event.target.value });
