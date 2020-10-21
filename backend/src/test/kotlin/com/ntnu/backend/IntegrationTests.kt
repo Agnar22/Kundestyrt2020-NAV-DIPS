@@ -2,8 +2,7 @@ package com.ntnu.backend
 
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
@@ -11,7 +10,6 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
-import org.springframework.web.client.HttpStatusCodeException
 import kotlin.concurrent.thread
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -20,17 +18,28 @@ class IntegrationTests {
     @Autowired
     lateinit var restTemplate: TestRestTemplate
 
-    var consumerReady: Boolean = false
+    var consume: Boolean = true
+    var consuming: Boolean = false
 
-    val consumedMessages: MutableList<String> = ArrayList()
+    var consumedMessages: MutableList<String> = ArrayList()
+
+
+    @AfterEach
+    fun tearDown(){
+        consume=false
+        while (consuming) {
+            Thread.sleep(100)
+        }
+        consume=true
+    }
 
     @Autowired
     fun consume(kafkaConsumer: KafkaConsumer<String, String>){
         thread(start = true) {
-            consumerReady = true
+            consuming = true
 
             val timeNow = System.currentTimeMillis()
-            while (true) {
+            while (consume) {
                 val records = kafkaConsumer.poll(500)
                 for (record in records) {
                     if (record.timestamp() > timeNow) {
@@ -38,9 +47,10 @@ class IntegrationTests {
                     }
                 }
             }
+            consuming = false
         }
 
-        while(!consumerReady) {
+        while(!consuming) {
             Thread.sleep(500)
         }
     }
@@ -63,5 +73,20 @@ class IntegrationTests {
         val messageFromKafka = consumedMessages.elementAt(0)
         val receivedQuestResponseId = JSONObject(messageFromKafka).getString("id")
         Assertions.assertEquals( questResponseId, receivedQuestResponseId)
+    }
+
+    @Test
+    fun `Assert that invalid tokens are rejected`(){
+        // Given
+        val questResponseId = "SMART-PROMs-74-QR4"
+        val headers = HttpHeaders()
+        headers.set("Authorization", "Invalid token")
+        val entity: HttpEntity<String> = HttpEntity(questResponseId, headers)
+
+        // When
+        val result = restTemplate.exchange("/send-application", HttpMethod.POST, entity, String::class.java)
+
+        // Then
+        Assertions.assertEquals(400, result.statusCodeValue)
     }
 }
