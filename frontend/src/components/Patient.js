@@ -186,7 +186,8 @@ export default class Patient extends React.Component {
       .then((res) => {
         if (res.status === 200){
           this.setState({
-            successfullSend : true
+            sucessfullSend : true,
+            sucessfullSave : false
           });
         } else {
           console.log('Error sending information to backend, status code:', res.status);
@@ -216,7 +217,8 @@ export default class Patient extends React.Component {
       A = <AlertStripe type="suksess">
         Skjemaet ble lagret!
       </AlertStripe>
-    }else if (this.state.sucessfullSend){
+    }
+    if (this.state.sucessfullSend){
       A = <AlertStripe type="suksess">
         Skjemaet ble lagret og sendt!
       </AlertStripe>
@@ -225,9 +227,6 @@ export default class Patient extends React.Component {
     return (
       <div className="form-wrapper">
         <h1> Erklæring om pleiepenger</h1>
-        <div id="popup" aria-live="polite">
-          {A}
-        </div>
         <div className="banner-wrapper">
           <PatientName name={patient.name} />
           <PatientSocialSecurityNumber identifier={patient.identifier} />
@@ -268,6 +267,10 @@ export default class Patient extends React.Component {
               />
             </MuiPickersUtilsProvider>
           </div>
+          <div id="popup" aria-live="polite">
+            {A}
+          </div>
+          <br/>
           <div className="button-wrapper">
             <Hovedknapp className="button" onClick={(e) => this.handleSave(e, 'in-progress')}>Lagre</Hovedknapp>
             <Hovedknapp className="button" htmlType="submit" disabled={this.state.sucessfullSend}>Send</Hovedknapp>
