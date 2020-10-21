@@ -15,8 +15,6 @@ import QuestionnaireResponseTemplate from '../QuestionnaireResponseTemplate.json
 import FhirClientContext from '../FhirClientContext';
 import axios from 'axios';
 
-
-
 moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
 
 const QUESTIONNAIRE_ID = 235192;
@@ -163,10 +161,7 @@ export default class Patient extends React.Component {
     this.saveAndSendToFHIR(status)
       .then((response) => {
         this.setState({ responseID: response.id });
-        if(status === "completed"){
-          this.setState({sucessfullSend: true});
-        }
-        else if (status === "in-progress"){
+        if (status === "in-progress"){
           this.setState({sucessfullSave: true});
         }
       }).catch((e) => {
@@ -191,8 +186,10 @@ export default class Patient extends React.Component {
     const axios = require('axios');
     axios.post('http://localhost:8081/send-application',  ID, config)
       .then((res) => {
-        if (res.status == 200){
-          console.log('Her kommer det banner');
+        if (res.status === 200){
+          this.setState({
+            successfullSend : true
+          });
         } else {
           console.error('Error sending information to backend, status code:', res.status);
         }
@@ -223,7 +220,7 @@ export default class Patient extends React.Component {
       </AlertStripe>
     }else if (this.state.sucessfullSend){
       A = <AlertStripe type="suksess">
-        Skjemaet ble sendt!
+        Skjemaet ble lagret og sendt!
       </AlertStripe>
     }
 
