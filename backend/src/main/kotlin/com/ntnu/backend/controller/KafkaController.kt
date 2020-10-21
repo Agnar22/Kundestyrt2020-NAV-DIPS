@@ -24,11 +24,16 @@ class KafkaController(val kafkaTemplate: KafkaTemplate<String, String>, properti
     @PostMapping("/send-application")
     @ResponseStatus(HttpStatus.CREATED)
     fun sendApplication(@RequestHeader(name="Authorization") token: String, @RequestBody body: String): ResponseEntity<String> {
-        var b1 = body
-        if (body.takeLast(1) == "=") {
-            val b1 = body.dropLast(1)
-        }
-        val response = khttp.get("http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/${b1}", headers = mapOf("Authorization" to token, "Content-Type" to "application/fhir-json"))
+        // The frontend sometimes sends the body with a '='-suffix, this has to be removed.
+        // The line below is a temporary fix for this problem.
+        val questionnaireResponseId = if (body.takeLast(1) == "=") body.dropLast((1)) else body
+        val response = khttp.get(
+            url= "http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/${questionnaireResponseId}",
+            headers = mapOf(
+                    "Authorization" to token,
+                    "Content-Type" to "application/fhir-json"
+            )
+        )
         return when (response.statusCode) {
             200 -> {
                 kafkaTemplate.send(topic, response.text)
