@@ -18,9 +18,12 @@ moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
 
 const axios = require('axios');
 
-const QUESTIONNAIRE_ID = 235192;
+const QUESTIONNAIRE_ID = 235237;
 
 function PatientName({ name = [] }) {
+  /*
+  Generates and wraps the patient's name
+  */
   const entry = name.find((nameRecord) => nameRecord.use === 'official') || name[0];
   if (!entry) {
     return <h3>Navn: Navn ikke funnet</h3>;
@@ -34,6 +37,9 @@ function PatientName({ name = [] }) {
 }
 
 function PatientSocialSecurityNumber({ identifier = [] }) {
+  /*
+  Generates and wraps the patient's socialsecuritynumber
+  */
   const socialSecurityNumber = identifier.find((sb) => sb.system === 'http://hl7.org/fhir/sid/us-ssn').value;
   if (!socialSecurityNumber) {
     return <p>Fødelsnummer ikke funnet</p>;
@@ -54,7 +60,7 @@ export default class Patient extends React.Component {
     this.state = {
       loading: true,
       patient: null,
-      value: '',
+      freetext: '',
       startDate: null,
       endDate: null,
       responseID: null,
@@ -78,13 +84,17 @@ export default class Patient extends React.Component {
   }
 
   formData = () => {
+    /*
+    Loads the patient and sets values for responseID
+    If they exists, freetext, startDate and endDate are also loaded
+     */
     const fhirclient = this.context.client;
     fhirclient.request(`http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/_search?questionnaire=${QUESTIONNAIRE_ID}&patient=${fhirclient.patient.id}&status=in-progress`)
       .then((result) => {
         if (result.total === 0) { return; }
         this.setState({ responseID: result.entry[0].resource.id });
         if (typeof (result.entry[0].resource.item[4].answer) !== 'undefined') {
-          this.setState({ value: result.entry[0].resource.item[4].answer[0].valueString });
+          this.setState({ freetext: result.entry[0].resource.item[4].answer[0].valueString });
         }
         if (typeof (result.entry[0].resource.item[2].answer) !== 'undefined') {
           this.setState({ startDate: result.entry[0].resource.item[2].answer[0].valueString });
@@ -98,14 +108,18 @@ export default class Patient extends React.Component {
       });
   }
 
-  // Gets QuestionnaireResponseTemplate.json and fills out with current patients information,
-  // before returning the form.
   convertToQuestionnaire = (status) => {
+    /*
+    Gets QuestionnaireResponseTemplate.json and fills out with current patient's information.
+
+    Returns: responseform (QuestionnaireResponseTemplate)
+    */
     const fullPatientName = `${this.state.patient.name[0].given
       .join(' ')} ${this.state.patient.name[0].family}`;
     const socialSecurityNumber = this.state.patient.identifier
       .find((sb) => sb.system === 'http://hl7.org/fhir/sid/us-ssn').value;
 
+    // Fill out the quesionnaire
     const responseForm = QuestionnaireResponseTemplate;
     responseForm.subject.reference = `Patient/${this.state.patient.id}`;
     responseForm.subject.display = fullPatientName;
@@ -113,18 +127,22 @@ export default class Patient extends React.Component {
     responseForm.item[1].answer[0].valueString = socialSecurityNumber;
     responseForm.item[2].answer[0].valueString = this.state.startDate ? this.state.startDate._d : '';
     responseForm.item[3].answer[0].valueString = this.state.endDate ? this.state.endDate._d : '';
-    responseForm.item[4].answer[0].valueString = this.state.value;
+    responseForm.item[4].answer[0].valueString = this.state.freetext;
 
     // Gets the fhirUser-ID of the practitioner and fills it in the form
     responseForm.author.reference = this.context.client.user.fhirUser;
 
-    // Sets the status of the QuestionnaireResponse-form to the functions argument
+    // Sets the status of the QuestionnaireResponse-form
     responseForm.status = status;
     return responseForm;
   }
 
-  // Function for saving the information in our form to FHIR
   saveAndSendToFHIR = (status) => {
+    /*
+    Saves the responseform to FHIR
+
+    Returns: request
+    */
     const filledResponse = this.convertToQuestionnaire(status);
 
     const fhirclient = this.context.client;
@@ -155,8 +173,10 @@ export default class Patient extends React.Component {
     return fhirclient.request(options);
   }
 
-  // Function for saving patient information form to FHIR with status in progress
   handleSave = (event, status) => {
+    /*
+    Saves the responseform to FHIR, with status 'in progress'
+    */
     event.preventDefault();
     this.saveAndSendToFHIR(status)
       .then((response) => {
@@ -169,9 +189,11 @@ export default class Patient extends React.Component {
       });
   }
 
-  // Function for saving patient information form to FHIR with status completed
-  // and sending it to Kafka-stream
   handleSubmit = (event, status) => {
+    /*
+    Saves the responseform to FHIR, with status 'completed'
+    Sends responseID and access-token to Kafka-stream
+    */
     this.handleSave(event, status);
 
     const token = this.context.client.state.tokenResponse.access_token;
@@ -193,15 +215,6 @@ export default class Patient extends React.Component {
           console.log('Error sending information to backend, status code:', res.status);
         }
       });
-  }
-
-  handleChange = (event) => {
-    this.setState({ value: event.target.value });
-    // Removes popup
-    this.setState({
-      sucessfullSave: false,
-      sucessfullSend: false,
-    });
   }
 
   /* eslint-disable react/jsx-props-no-spreading */
@@ -238,7 +251,19 @@ export default class Patient extends React.Component {
           <PatientSocialSecurityNumber identifier={patient.identifier} />
         </div>
         <form className="patientform" onSubmit={(e) => this.handleSubmit(e, 'completed')}>
-          <Textarea className="tekstfelt" value={this.state.value} onChange={this.handleChange} maxLength={0} disabled={this.state.sucessfullSend} />
+          <Textarea
+            className="tekstfelt"
+            value={this.state.freetext}
+            onChange={(event) => {
+              this.setState({
+                freetext: event.target.value,
+                sucessfullSave: false,
+                sucessfullSend: false,
+              });
+            }}
+            maxLength={0}
+            disabled={this.state.sucessfullSend}
+          />
           <div className="datepicker-wrapper">
             <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale="nb">
               <KeyboardDatePicker
