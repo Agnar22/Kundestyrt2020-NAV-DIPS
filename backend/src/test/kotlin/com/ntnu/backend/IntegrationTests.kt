@@ -20,12 +20,14 @@ class IntegrationTests {
 
     var consume: Boolean = true
     var consuming: Boolean = false
-
     var consumedMessages: MutableList<String> = ArrayList()
 
 
     @AfterEach
     fun tearDown(){
+        // The consume function is autowired for each test.
+        // We need to wait for the thread from the previous test to finish
+        // before we can start the next one.
         consume=false
         while (consuming) {
             Thread.sleep(100)
@@ -42,6 +44,8 @@ class IntegrationTests {
             while (consume) {
                 val records = kafkaConsumer.poll(500)
                 for (record in records) {
+                    // Disregard any messages that was sent before the test
+                    // in order to avoid dependencies in between runs.
                     if (record.timestamp() > timeNow) {
                         consumedMessages.add(record.value())
                     }
@@ -60,6 +64,8 @@ class IntegrationTests {
         // Given
         val questResponseId = "SMART-PROMs-74-QR4"
         val headers = HttpHeaders()
+        // The FHIR server that we are using is accepting valid JWT tokens and no JWT tokens.
+        // Only invalid tokens are denied access.
         headers.set("Authorization", "")
         val entity: HttpEntity<String> = HttpEntity(questResponseId, headers)
 
