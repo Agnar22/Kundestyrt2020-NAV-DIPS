@@ -18,7 +18,7 @@ moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
 
 const axios = require('axios');
 
-const QUESTIONNAIRE_ID = 235192;
+const QUESTIONNAIRE_ID = 235192; //This should be parameter from EHR
 
 function PatientName({ name = [] }) {
   const entry = name.find((nameRecord) => nameRecord.use === 'official') || name[0];
@@ -79,7 +79,8 @@ export default class Patient extends React.Component {
 
   formData = () => {
     const fhirclient = this.context.client;
-    fhirclient.request(`http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/_search?questionnaire=${QUESTIONNAIRE_ID}&patient=${fhirclient.patient.id}&status=in-progress`)
+    
+    fhirclient.request(`${fhirclient.state.serverUrl}/QuestionnaireResponse/_search?questionnaire=${QUESTIONNAIRE_ID}&patient=${fhirclient.patient.id}&status=in-progress`)
       .then((result) => {
         if (result.total === 0) { return; }
         this.setState({ responseID: result.entry[0].resource.id });
@@ -137,7 +138,7 @@ export default class Patient extends React.Component {
     // Patient has no existing QuestionnairyResponse and a new one is created
     if (this.state.responseID === null) {
       options = {
-        url: 'http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse',
+        url: `${fhirclient.state.serverUrl}/QuestionnaireResponse`,
         body: JSON.stringify(filledResponse),
         headers,
         method: 'POST',
@@ -146,7 +147,7 @@ export default class Patient extends React.Component {
       // Patient has previously excisting QuestionnairyResponse
       filledResponse.id = this.state.responseID;
       options = {
-        url: `http://launch.smarthealthit.org/v/r3/fhir/QuestionnaireResponse/${this.state.responseID}`,
+        url: `${fhirclient.state.serverUrl}/QuestionnaireResponse/${this.state.responseID}`,
         body: JSON.stringify(filledResponse),
         headers,
         method: 'PUT',
