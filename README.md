@@ -1,33 +1,39 @@
 # Kundestyrt2020-NAV-DIPS
 
 
-## CONTENTS OF THIS FILE
----------------------
+## Contents of this file
  * Introduction
  * Requirements
  * Installation
- * SMART Client
  * SMART on FHIR 
  * Usage
  * Maintainers
  
-## INTRODUCTION
+## Introduction
+This project is the work of group 9 in the class TDT4290 - Customer Driven Project at NTNU during the fall of 2020. The group was assigned NAV and DIPS as customers, who wanted to explore the possibilities and capabilities available through the use of the SMART on FHIR platform in developing a web-app.
+The main goal of this project was to create a SMART-app, as a proof of concept for digitizing the process for a specific type of application (attendance allowance) within NAVs systems.  
 
-## REQUIREMENTS
-- Node.js
-- Node Package Manager
-    https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+
+## Requirements
 - Kotlin
 - Docker
 
 
-## INSTALLATION
+## Installation
+
 ### Frontend
-From the frontend folder, install all necessary dependencies:
-`npm install`
+Download  and install **Node.js** and **npm** following [this installation guide](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 
-
-### Backend
+Navigate to the `\frontend` folder, and install all necessary dependencies using the terminal with:
+```bash
+npm install
+```
+When all dependencies are installed the app can be started by running
+ ```bash
+npm start
+```
+### Back-end
+Install Kotlin by following [this guide](https://hub.packtpub.com/getting-started-with-kotlin-programming/).
 
  
 ### Kafka
@@ -90,7 +96,8 @@ When a doctor opens a docuemnt a request is sent to the FHIR API for patient inf
 
 When a doctor saves or sends the form a _QuestionnaireResponse_ is created or updated in the FHIR server. When sending the form a request is also sent to the backend at NAV. This request contains the SMART client access token and the identifier to the _QuestionnaireResponse_. The backend then uses the access token together with the identifier to get the _QuestionnaireResponse_ from the FHIR API. The _QuestionnaireResponse_ is then pushed to the Kafka queue in the NAV cluster. 
 
-## USAGE
+## Usage
+We have used the SMART app launcher provided by [smarthealtit.org](https://launch.smarthealthit.org/) to run our project. 
 ### Run the project without docker
 
 From the frontend folder, start the app in development mode:
@@ -110,7 +117,7 @@ Run image as container:
 
 The application is now available from the docker default ip on port 3001.
  
-## CODE STYLE
+## Code style
 
 ###If you want to run linter for the project:
 `npm run lint`
@@ -118,4 +125,4 @@ The application is now available from the docker default ip on port 3001.
 Automatically fix small mistakes:
  `npm run lint-fix`
  
-## MAINTAINERS
+## Maintainers
