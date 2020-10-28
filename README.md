@@ -92,6 +92,8 @@ A _QuestionnaireResponse_ that is saved without being completed will have `statu
 ## Information flow:
 The general flow of information after the SMART client has been authorized is depicted in the sequence diagram below. 
 
+![](images/Sequence_diagram.png)
+
 When a doctor opens a docuemnt a request is sent to the FHIR API for patient information and existing _QuestionnaireResponse_. If an in-progress _QuestionnaireResponse_ exists the fields in the applicaton is prefilled with this information. Else only the patient ssn and name is prefilled. 
 
 When a doctor saves or sends the form a _QuestionnaireResponse_ is created or updated in the FHIR server. When sending the form a request is also sent to the backend at NAV. This request contains the SMART client access token and the identifier to the _QuestionnaireResponse_. The backend then uses the access token together with the identifier to get the _QuestionnaireResponse_ from the FHIR API. The _QuestionnaireResponse_ is then pushed to the Kafka queue in the NAV cluster. 
