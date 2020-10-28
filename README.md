@@ -1,9 +1,9 @@
+
 # Kundestyrt2020-NAV-DIPS
 
 
 ## Contents of this file
  * Introduction
- * Requirements
  * Installation
  * SMART on FHIR 
  * Usage
@@ -12,12 +12,6 @@
 ## Introduction
 This project is the work of group 9 in the class TDT4290 - Customer Driven Project at NTNU during the fall of 2020. The group was assigned NAV and DIPS as customers, who wanted to explore the possibilities and capabilities available through the use of the SMART on FHIR platform in developing a web-app.
 The main goal of this project was to create a SMART-app, as a proof of concept for digitizing the process for a specific type of application (attendance allowance) within NAVs systems.  
-
-
-## Requirements
-- Kotlin
-- Docker
-
 
 ## Installation
 
@@ -154,15 +148,31 @@ Before using the application a _Questionnaire_ has to be pushed to the FHIR serv
 }
 ```
 
-We have used the SMART app launcher provided by [smarthealtit.org](https://launch.smarthealthit.org/) to run our project. 
 ### Run the project without docker
+
+As the FHIR API provided by smarthealtit.org deletes new addition on a daily basis, the id of the newly inserted *Questionnaire*  must be updated in the front-end code. The new value for the *Questionnaire id* should replace the value in the following two places:
+- [QuestionnaireResponseTemplate.json](https://github.com/Agnar22/Kundestyrt2020-NAV-DIPS/blob/29cff4bfed12dbadd79b6e60c65595e4f72405b7/frontend/src/QuestionnaireResponseTemplate.json#L3)
+- [Patient.js](https://github.com/Agnar22/Kundestyrt2020-NAV-DIPS/blob/29cff4bfed12dbadd79b6e60c65595e4f72405b7/frontend/src/components/Patient.js#L21)
 
 From the frontend folder, start the app in development mode:
 `npm start` 
- 
+
+The back-end must then be started by running _KafkaController.kt_ from the _bakend_ directory. 
+
+With the back-end running, the app can be launched through the SMART app launcher provided by [smarthealtit.org](https://launch.smarthealthit.org/).
+Select **Provider EHR Launch** and **R3 (STU3)** as FHIR version. Then you can select an arbitrary *Patient* and *Provider* in the drop-down menus.
+
+The **App Launch URL** should then be set to match the url of the app, http://localhost:3030.
+By clicking "Launch App!" the app will then be launched from the simulated EHR. 
+
+When the app has loaded it is possible to add a note in the text field, as well as selecting a period through the date-pickers. The form can be saved (to the FHIR-API) by using the "Lagre"-button.
+The information will then be available again when launching the app with the same patient at a later time.
+It is also possible to click send, which will send a request to the back-end, and in turn post the form on the Kafka queue.
+A confirmation will pop-up when any of these two actions are successful.
 
  
- ### Build and run project with docker
+ ### Build and run project with Docker
+Download and install Docker as explained in [this guide](https://docs.docker.com/desktop/).
 
 From frontend folder:
 
@@ -181,5 +191,3 @@ The application is now available from the docker default ip on port 3001.
 
 Automatically fix small mistakes:
  `npm run lint-fix`
- 
-## Maintainers
