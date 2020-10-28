@@ -13,6 +13,14 @@ import org.springframework.kafka.core.KafkaAdmin
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.core.ProducerFactory
 
+/**
+ * This class contains all the necessary beans for kafka.
+ *
+ * createTopic creates a new topic on start up if it does not exist.
+ * consumer creates a bean for a kafka consumer.
+ * kafkaTemplate creates a bean for a kafka producer.
+ */
+
 @Configuration
 class Kafka(properties: KafkaProperties) {
 
