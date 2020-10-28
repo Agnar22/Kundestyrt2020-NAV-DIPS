@@ -99,6 +99,61 @@ When a doctor opens a docuemnt a request is sent to the FHIR API for patient inf
 When a doctor saves or sends the form a _QuestionnaireResponse_ is created or updated in the FHIR server. When sending the form a request is also sent to the backend at NAV. This request contains the SMART client access token and the identifier to the _QuestionnaireResponse_. The backend then uses the access token together with the identifier to get the _QuestionnaireResponse_ from the FHIR API. The _QuestionnaireResponse_ is then pushed to the Kafka queue in the NAV cluster. 
 
 ## Usage
+Before using the application a _Questionnaire_ has to be pushed to the FHIR server. When using the servers supplied by SMART Health IT this has to be done every day. The _Questionnaire_ can be pushed to the FHIR server with a POST request with the following body:
+
+```
+{
+  "version": "0.1",
+  "subjectType": [
+    "Navn",
+    "Personnummer",
+    "Dato fra",
+    "Dato til",
+    "Notat"
+  ],
+  "status": "active",
+  "experimental": true,
+  "effectivePeriod": {
+    "start": "2020-10-12T22:00:00.000Z"
+  },
+  "name": "pleiepenger",
+  "title": "Pleiepenger",
+  "resourceType": "Questionnaire",
+  "item": [
+    {
+      "type": "string",
+      "required": true,
+      "linkId": "spm_navn",
+      "text": "Navn"
+    },
+    {
+      "type": "string",
+      "required": true,
+      "linkId": "spm_personnummer",
+      "text": "Personnummer"
+    },
+    {
+      "type": "string",
+      "required": false,
+      "linkId": "spm_dato_fra",
+      "text": "Dato fra"
+    },
+    {
+      "type": "string",
+      "required": false,
+      "linkId": "spm_dato_til",
+      "text": "Dato til"
+    },
+    {
+      "type": "string",
+      "required": false,
+      "linkId": "spm_notater",
+      "text": "Notater"
+    }
+  ]
+}
+```
+
 We have used the SMART app launcher provided by [smarthealtit.org](https://launch.smarthealthit.org/) to run our project. 
 ### Run the project without docker
 
