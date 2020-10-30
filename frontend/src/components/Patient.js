@@ -18,7 +18,7 @@ moment.locale('nb'); // Set calendar to be norwegian (bokmaal)
 
 const axios = require('axios');
 
-const QUESTIONNAIRE_ID = 235192; //This should be parameter from EHR
+const QUESTIONNAIRE_ID = 235192; // This should be parameter from EHR
 
 function PatientName({ name = [] }) {
   const entry = name.find((nameRecord) => nameRecord.use === 'official') || name[0];
@@ -79,7 +79,7 @@ export default class Patient extends React.Component {
 
   formData = () => {
     const fhirclient = this.context.client;
-    
+
     fhirclient.request(`${fhirclient.state.serverUrl}/QuestionnaireResponse/_search?questionnaire=${QUESTIONNAIRE_ID}&patient=${fhirclient.patient.id}&status=in-progress`)
       .then((result) => {
         if (result.total === 0) { return; }
