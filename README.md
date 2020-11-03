@@ -3,11 +3,13 @@
 
 
 ## Contents of this file
- * Introduction
- * Installation
- * SMART on FHIR 
- * Usage
- * Maintainers
+ * [Introduction](#introduction)
+ * [Installation](#installation)
+ * [SMART on FHIR](#smart-on-fhir)
+ * [Information flow](#information-flow)
+ * [Usage](#usage)
+ * [Code style](#code-style)
+ * [Maintainers](#maintainters)
  
 ## Introduction
 This project is the work of group 9 in the class TDT4290 - Customer Driven Project at NTNU during the fall of 2020. The group was assigned NAV and DIPS as customers, who wanted to explore the possibilities and capabilities available through the use of the SMART on FHIR platform in developing a web-app.
@@ -65,10 +67,10 @@ A SMART app must support the [EHR launch flow](http://www.hl7.org/fhir/smart-app
 
 ### Using the SMART client
 
-##### Reading patient information
+#### Reading patient information
 The SMART app is associated with a patient. Information about the current patient can be read using the method `client.patient.read()`. The method returns a _Promise_ containing the patient resource as specified in the [FHIR documentation](https://www.hl7.org/fhir/patient.html).
 
-##### Writing to the EHR
+#### Writing to the EHR
 To write a new or update an existing _QuestionnaireResponse_ we use the `request()` method from the SMART client. The method takes _RequestOptions_ as argument. _RequestOptions_ is an object that should at least contain the following for creating a new _QuestionnaireResponse_: 
 ```
 { 
@@ -97,12 +99,12 @@ In both cases the request body is a string containing the _QuestionnaireResponse
 A _QuestionnaireResponse_ that is saved without being completed will have `status: "in-progress"` whereas a _QuestionnaireResponse_ that is sent to NAV will have `status: "completed"` as attributes.
 
 
-## Information flow:
+## Information flow
 The general flow of information after the SMART client has been authorized is depicted in the sequence diagram below. 
 
 ![](images/Sequence_diagram.png)
 
-When a doctor opens a docuemnt a request is sent to the FHIR API for patient information and existing _QuestionnaireResponse_. If an in-progress _QuestionnaireResponse_ exists the fields in the applicaton is prefilled with this information. Else only the patient ssn and name is prefilled. 
+When a doctor opens a document, a request is sent to the FHIR API for patient information and existing _QuestionnaireResponse_. If an in-progress _QuestionnaireResponse_ exists the fields in the applicaton is prefilled with this information. Else only the patient ssn and name is prefilled. 
 
 When a doctor saves or sends the form a _QuestionnaireResponse_ is created or updated in the FHIR server. When sending the form a request is also sent to the backend at NAV. This request contains the SMART client access token and the identifier to the _QuestionnaireResponse_. The backend then uses the access token together with the identifier to get the _QuestionnaireResponse_ from the FHIR API. The _QuestionnaireResponse_ is then pushed to the Kafka queue in the NAV cluster. 
 
@@ -185,7 +187,7 @@ It is also possible to click send, which will send a request to the back-end, an
 A confirmation will pop-up when any of these two actions are successful.
 
  
- ### Build and run project with Docker
+### Build and run project with Docker
 Download and install Docker as explained in [this guide](https://docs.docker.com/desktop/).
 
 From frontend folder:
@@ -200,8 +202,12 @@ The application is now available from the docker default ip on port 3001.
  
 ## Code style
 
-###If you want to run linter for the project:
-`npm run lint`
+If you want to run linter for the project:
+```bash
+npm run lint
+```
 
 Automatically fix small mistakes:
- `npm run lint-fix`
+```bash
+npm run lint-fix
+```
