@@ -36,7 +36,10 @@ To allow the kafkaproducer & -consumer to connect to NAVs kafka stream, we need 
         - Set the necessary environment variables for the keystore and truststore by:
             - double tap shift -> "Edit configurations..." -> "+" -> "Spring boot"
                 - Set "Main class" to: com.ntnu.BackendApplication
-                - Set "Environment variables" to:<br>CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION>;CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD>;CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION>;CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>
+                - Set "Environment variables" to:
+                ```text
+                CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION>;CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD>;CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION>;CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>
+                ```
             - Accept changes by clicking "OK"
         - Install dependencies: Right click on pom.xml -> "Maven" -> "Reload Project"
         - Run the application by pressing the green play button (Shift+F10).
