@@ -27,18 +27,34 @@ When all dependencies are installed the app can be started by running
 npm start
 ```
 ### Back-end
-Install Kotlin by following [this guide](https://hub.packtpub.com/getting-started-with-kotlin-programming/).
-
- 
-### Kafka
 The backendapplication has a kafkaproducer & -consumer. It connects to bootstrap-servers, as specified in application.properties.
 To allow the kafkaproducer & -consumer to connect to NAVs kafka stream, we need to have a keystore and a truststore, as well as the respective passwords.
  - Ask the owner of this repository to send the keystore and clientstore, as well as the respective passwords.
+ - From there on, there are two recommended ways to run the backend, to run it from the command line or to run in from Intellij.
+   - <b>Intellij:</b>
+     - [Download Intellij.](https://www.jetbrains.com/idea/download/)
+     - Set the necessary environmentvariables for the keystore and truststore by:
+       - double tap shift -> "Edit configurations..." -> "+" -> "Spring boot"
+         - Set "Main class" to: com.ntnu.BackendApplication
+         - Set "Environment variables" to:<br>CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION>;CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD>;CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION>;CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>
+       - Accept changes by clicking "OK"
+     - Install dependencies: Right click on pom.xml -> "Maven" -> "Reload Project"
+     - Run the application by pressing the green play button (Shift+F10).
+   - <b>Command line:</b>
+     - [Download the Kotlin compiler.](https://kotlinlang.org/docs/tutorials/command-line.html#downloading-the-compiler)
+     - [Install Maven.](https://www.baeldung.com/install-maven-on-windows-linux-mac)
+     - Run the application with:
+
+       `sudo mvn spring-boot:run -Dspring-boot.run.arguments="--CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION> --CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD> --CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION> --CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>"`
+ - You can test that everything is working by using the [testing endpoint](http://localhost:8081/testing). It should display "Published successfully".
+ 
+ 
+ 
  - Store the clientstore and keystore on your computer and set the CLIENT_KEYSTORE_LOCATION and CLIENT_TRUSTSTORE_LOCATION environment variables.
-   - In intellij, you can achieve this by: double tap shift -> "Edit configurations..." -> "+" -> "Spring boot"
-     - Set "Main class" to: com.ntnu.BackendApplication
-     - Set "Environment variables" to:<br>CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION>;CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD>;CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD;CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION>
-     
+   - In intellij, you can achieve this by: 
+
+ 
+### Kafka
 If you want to run kafka locally, follow one one of these guides:
  - Windows: [Video by Daily Code Buffer](https://www.youtube.com/watch?v=EUzH9khPYgs)
  - Ubuntu 18.04: [Tutorial by DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-install-apache-kafka-on-ubuntu-18-04)
