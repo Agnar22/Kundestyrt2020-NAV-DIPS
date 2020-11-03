@@ -30,10 +30,10 @@ npm start
 The backendapplication has a kafkaproducer & -consumer. It connects to bootstrap-servers, as specified in application.properties.
 To allow the kafkaproducer & -consumer to connect to NAVs kafka stream, we need to have a keystore and a truststore, as well as the respective passwords.
  - Ask the owner of this repository to send the keystore and clientstore, as well as the respective passwords.
- - From there on, there are two recommended ways to run the backend, to run it from the command line or to run in from Intellij.
+ - From there on, there are two recommended ways to run the backend, from the command line or from Intellij.
    - <b>Intellij:</b>
      - [Download Intellij.](https://www.jetbrains.com/idea/download/)
-     - Set the necessary environmentvariables for the keystore and truststore by:
+     - Set the necessary environ mentvariables for the keystore and truststore by:
        - double tap shift -> "Edit configurations..." -> "+" -> "Spring boot"
          - Set "Main class" to: com.ntnu.BackendApplication
          - Set "Environment variables" to:<br>CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION>;CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD>;CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION>;CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>
