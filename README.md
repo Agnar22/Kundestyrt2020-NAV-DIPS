@@ -32,24 +32,22 @@ To allow the kafkaproducer & -consumer to connect to NAVs kafka stream, we need 
  - Ask the owner of this repository to send the keystore and clientstore, as well as the respective passwords.
  - From there on, there are two recommended ways to run the backend, from the command line or from Intellij.
    - <b>Intellij:</b>
-     - [Download Intellij.](https://www.jetbrains.com/idea/download/)
-     - Set the necessary environ mentvariables for the keystore and truststore by:
-       - double tap shift -> "Edit configurations..." -> "+" -> "Spring boot"
-         - Set "Main class" to: com.ntnu.BackendApplication
-         - Set "Environment variables" to:<br>CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION>;CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD>;CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION>;CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>
-       - Accept changes by clicking "OK"
-     - Install dependencies: Right click on pom.xml -> "Maven" -> "Reload Project"
-     - Run the application by pressing the green play button (Shift+F10).
-   - <b>Command line:</b>
-     - [Download the Kotlin compiler.](https://kotlinlang.org/docs/tutorials/command-line.html#downloading-the-compiler)
-     - [Install Maven.](https://www.baeldung.com/install-maven-on-windows-linux-mac)
-     - Run the application with:
-
+        - [Download Intellij.](https://www.jetbrains.com/idea/download/)
+        - Set the necessary environment variables for the keystore and truststore by:
+            - double tap shift -> "Edit configurations..." -> "+" -> "Spring boot"
+                - Set "Main class" to: com.ntnu.BackendApplication
+                - Set "Environment variables" to:<br>CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION>;CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD>;CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION>;CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>
+            - Accept changes by clicking "OK"
+        - Install dependencies: Right click on pom.xml -> "Maven" -> "Reload Project"
+        - Run the application by pressing the green play button (Shift+F10).
+    - <b>Command line:</b>
+        - [Download the Kotlin compiler.](https://kotlinlang.org/docs/tutorials/command-line.html#downloading-the-compiler)
+        - [Install Maven.](https://www.baeldung.com/install-maven-on-windows-linux-mac)
+        - Run the application with:
        ```bash
-       sudo mvn spring-boot:run -Dspring-boot.run.arguments="--CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION> --CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD>   --CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION> --CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>"
+       sudo mvn spring-boot:run -Dspring-boot.run.arguments="--CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION> --CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD> --CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION> --CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>"
        ```
  - You can test that everything is working by using the [testing endpoint](http://localhost:8081/testing). It should display "Published successfully".
- 
  
 ### Kafka
 If you want to run kafka locally, follow one one of these guides:
