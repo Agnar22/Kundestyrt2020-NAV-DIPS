@@ -35,6 +35,7 @@ To allow the kafkaproducer & -consumer to connect to NAVs kafka stream, we need 
  - From there on, there are two recommended ways to run the backend, from the command line or from Intellij.
    - <b>Intellij:</b>
         - [Download Intellij.](https://www.jetbrains.com/idea/download/)
+        - Open the project in Intellij with the backend folder as root folder.
         - Set the necessary environment variables for the keystore and truststore by:
             - double tap shift -> "Edit configurations..." -> "+" -> "Spring boot"
                 - Set "Main class" to: com.ntnu.BackendApplication
@@ -48,6 +49,10 @@ To allow the kafkaproducer & -consumer to connect to NAVs kafka stream, we need 
     - <b>Command line:</b>
         - [Download the Kotlin compiler.](https://kotlinlang.org/docs/tutorials/command-line.html#downloading-the-compiler)
         - [Install Maven.](https://www.baeldung.com/install-maven-on-windows-linux-mac)
+        - Go into the backend folder:
+        ```bash
+        cd backend
+        ```
         - Run the application with:
        ```bash
        sudo mvn spring-boot:run -Dspring-boot.run.arguments="--CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION> --CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD> --CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION> --CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>"
@@ -96,7 +101,7 @@ In both cases the request body is a string containing the _QuestionnaireResponse
     Accept: 'application/fhir+json'
 }
 ```
-A _QuestionnaireResponse_ that is saved without being completed will have `status: "in-progress"` whereas a _QuestionnaireResponse_ that is sent to NAV will have `status: "completed"` as attributes.
+A _QuestionnaireResponse_ that is saved without being completed will have `status: "in-progress"` whereas a _QuestionnaireResponse_ that is sent to NAV will have `status: "completed"`.
 
 
 ## Information flow
