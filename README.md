@@ -33,7 +33,7 @@ To allow the kafkaproducer & -consumer to connect to NAVs kafka stream, we need 
  - From there on, there are two recommended ways to run the backend, from the command line or from Intellij.
    - <b>Intellij:</b>
      - [Download Intellij.](https://www.jetbrains.com/idea/download/)
-     - Set the necessary environment variables for the keystore and truststore by:
+     - Set the necessary environ mentvariables for the keystore and truststore by:
        - double tap shift -> "Edit configurations..." -> "+" -> "Spring boot"
          - Set "Main class" to: com.ntnu.BackendApplication
          - Set "Environment variables" to:<br>CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION>;CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD>;CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION>;CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>
@@ -45,7 +45,9 @@ To allow the kafkaproducer & -consumer to connect to NAVs kafka stream, we need 
      - [Install Maven.](https://www.baeldung.com/install-maven-on-windows-linux-mac)
      - Run the application with:
 
-       `sudo mvn spring-boot:run -Dspring-boot.run.arguments="--CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION> --CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD> --CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION> --CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>"`
+       ```bash
+       sudo mvn spring-boot:run -Dspring-boot.run.arguments="--CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION> --CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD>   --CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION> --CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>"
+       ```
  - You can test that everything is working by using the [testing endpoint](http://localhost:8081/testing). It should display "Published successfully".
  
  
