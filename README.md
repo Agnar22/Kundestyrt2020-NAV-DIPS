@@ -49,10 +49,7 @@ To allow the kafkaproducer & -consumer to connect to NAVs kafka stream, we need 
     - <b>Command line:</b>
         - [Download the Kotlin compiler.](https://kotlinlang.org/docs/tutorials/command-line.html#downloading-the-compiler)
         - [Install Maven.](https://www.baeldung.com/install-maven-on-windows-linux-mac)
-        - Go into the backend folder:
-        ```bash
-        cd backend
-        ```
+        - Navigate to the `\backend` folder
         - Run the application with:
        ```bash
        sudo mvn spring-boot:run -Dspring-boot.run.arguments="--CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION> --CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD> --CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION> --CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>"
