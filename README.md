@@ -111,6 +111,7 @@ When a doctor opens a document, a request is sent to the FHIR API for patient in
 When a doctor saves or sends the form a _QuestionnaireResponse_ is created or updated in the FHIR server. When sending the form a request is also sent to the backend at NAV. This request contains the SMART client access token and the identifier to the _QuestionnaireResponse_. The backend then uses the access token together with the identifier to get the _QuestionnaireResponse_ from the FHIR API. The _QuestionnaireResponse_ is then pushed to the Kafka queue in the NAV cluster. 
 
 ## Usage
+### Questionnaire
 Before using the application a _Questionnaire_ has to be pushed to the FHIR server. When using the servers supplied by SMART Health IT this has to be done every day. The _Questionnaire_ can be pushed to the FHIR server with a POST request with the following body:
 
 ```
@@ -166,11 +167,12 @@ Before using the application a _Questionnaire_ has to be pushed to the FHIR serv
 }
 ```
 
-### Run the project without docker
-
 As the FHIR API provided by smarthealtit.org deletes new addition on a daily basis, the id of the newly inserted *Questionnaire*  must be updated in the front-end code. The new value for the *Questionnaire id* should replace the value in the following two places:
 - [QuestionnaireResponseTemplate.json](https://github.com/Agnar22/Kundestyrt2020-NAV-DIPS/blob/29cff4bfed12dbadd79b6e60c65595e4f72405b7/frontend/src/QuestionnaireResponseTemplate.json#L3)
 - [Patient.js](https://github.com/Agnar22/Kundestyrt2020-NAV-DIPS/blob/29cff4bfed12dbadd79b6e60c65595e4f72405b7/frontend/src/components/Patient.js#L21)
+
+### Run the project without docker
+
 
 From the frontend folder, start the app in development mode:
 `npm start` 
