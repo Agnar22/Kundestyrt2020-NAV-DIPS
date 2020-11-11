@@ -17,6 +17,8 @@ The main goal of this project was to create a SMART-app, as a proof of concept f
 
 ## Installation
 
+Following is a guide on how to setup the project. The frontend and the backend can run independently of each other. The frontend is only relying on the backend when it is to send the form, as displayed in [the information flow](#information-flow).
+
 ### Frontend
 Download  and install **Node.js** and **npm** following [this installation guide](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 
