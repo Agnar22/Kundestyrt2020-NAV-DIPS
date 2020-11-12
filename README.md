@@ -9,7 +9,6 @@
  * [Information flow](#information-flow)
  * [Usage](#usage)
  * [Code style](#code-style)
- * [Maintainers](#maintainters)
  
 ## Introduction
 This project is the work of group 9 in the class TDT4290 - Customer Driven Project at NTNU during the fall of 2020. The group was assigned NAV and DIPS as customers, who wanted to explore the possibilities and capabilities available through the use of the SMART on FHIR platform in developing a web-app.
