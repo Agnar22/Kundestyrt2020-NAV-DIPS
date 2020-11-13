@@ -7,7 +7,16 @@ import org.springframework.http.ResponseEntity
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.web.bind.annotation.*
 
-
+/**
+ * This class contains the endpoints for the application.
+ *
+ * sendApplication receives a JWT as well as a questionnaire response id.
+ * It then queries the FHIR server for the requested questionnaire response id.
+ * This ensures that authentication and authorization is centralized at the FHIR server.
+ *
+ * publishMessage is a dummy endpoint. It does nothing more than putting "testmessage"
+ * on the topic specified in application.properties file.
+ */
 @RestController
 class KafkaController(val kafkaTemplate: KafkaTemplate<String, String>, properties: KafkaProperties) {
 
