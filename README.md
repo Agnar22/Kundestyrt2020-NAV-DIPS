@@ -31,7 +31,7 @@ npm start
 ```
 ### Back-end
 The backendapplication has a Kafka producer & -consumer. It connects to bootstrap-servers, as specified in application.properties.
-To allow the Kafka producer & -consumer to connect to NAV's Kafka, we need to have a keystore and a truststore, as well as the respective passwords.
+To allow the Kafka producer & -consumer to connect to NAV's Kafka, we need to have a keystore and a truststore, as well as the respective passwords. If you do not have this, the backend will not run. However, it is possible to [run Kafka locally](#run-kafka-locally).
  - Ask the owner of this repository to send the keystore and clientstore, as well as the respective passwords.
  - From there on, there are two recommended ways to run the backend, from the command line or from Intellij.
    - <b>Intellij:</b>
@@ -57,10 +57,11 @@ To allow the Kafka producer & -consumer to connect to NAV's Kafka, we need to ha
        ```
  - You can test that everything is working by using the [testing endpoint](http://localhost:8081/testing). It should display "Published successfully".
  
-### Kafka
+### Run Kafka locally
 If you want to run Kafka locally, follow one one of these guides:
  - Windows: [Video by Daily Code Buffer](https://www.youtube.com/watch?v=EUzH9khPYgs)
  - Ubuntu 18.04: [Tutorial by DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-install-apache-kafka-on-ubuntu-18-04)
+Then you will have to [remove these lines](https://github.com/Agnar22/Kundestyrt2020-NAV-DIPS/blob/master/backend/src/main/kotlin/com/ntnu/backend/config/Kafka.kt#L30-L34) and set the correct [bootstrap-server](https://github.com/Agnar22/Kundestyrt2020-NAV-DIPS/blob/master/backend/src/main/resources/application.properties#L6)
 
 ## SMART on FHIR
 The SMART on FHIR client library allows you to build browser based apps - hereafter referred to as SMART apps - that can interact with FHIR REST APIs. 
