@@ -30,8 +30,8 @@ When all dependencies are installed the app can be started by running
 npm start
 ```
 ### Back-end
-The backendapplication has a kafkaproducer & -consumer. It connects to bootstrap-servers, as specified in application.properties.
-To allow the kafkaproducer & -consumer to connect to NAVs kafka stream, we need to have a keystore and a truststore, as well as the respective passwords.
+The backendapplication has a Kafka producer & -consumer. It connects to bootstrap-servers, as specified in application.properties.
+To allow the Kafka producer & -consumer to connect to NAV's Kafka, we need to have a keystore and a truststore, as well as the respective passwords.
  - Ask the owner of this repository to send the keystore and clientstore, as well as the respective passwords.
  - From there on, there are two recommended ways to run the backend, from the command line or from Intellij.
    - <b>Intellij:</b>
@@ -58,7 +58,7 @@ To allow the kafkaproducer & -consumer to connect to NAVs kafka stream, we need 
  - You can test that everything is working by using the [testing endpoint](http://localhost:8081/testing). It should display "Published successfully".
  
 ### Kafka
-If you want to run kafka locally, follow one one of these guides:
+If you want to run Kafka locally, follow one one of these guides:
  - Windows: [Video by Daily Code Buffer](https://www.youtube.com/watch?v=EUzH9khPYgs)
  - Ubuntu 18.04: [Tutorial by DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-install-apache-kafka-on-ubuntu-18-04)
 
@@ -109,7 +109,7 @@ The general flow of information after the SMART client has been authorized is de
 
 When a doctor opens a document, a request is sent to the FHIR API for patient information and existing _QuestionnaireResponse_. If an in-progress _QuestionnaireResponse_ exists the fields in the applicaton is prefilled with this information. Else only the patient ssn and name is prefilled. 
 
-When a doctor saves or sends the form a _QuestionnaireResponse_ is created or updated in the FHIR server. When sending the form a request is also sent to the backend at NAV. This request contains the SMART client access token and the identifier to the _QuestionnaireResponse_. The backend then uses the access token together with the identifier to get the _QuestionnaireResponse_ from the FHIR API. The _QuestionnaireResponse_ is then pushed to the Kafka queue in the NAV cluster. 
+When a doctor saves or sends the form a _QuestionnaireResponse_ is created or updated in the FHIR server. When sending the form a request is also sent to the backend at NAV. This request contains the SMART client access token and the identifier to the _QuestionnaireResponse_. The backend then uses the access token together with the identifier to get the _QuestionnaireResponse_ from the FHIR API. The _QuestionnaireResponse_ is then published on the Kafka topic in the NAV cluster. 
 
 ## Usage
 ### Questionnaire
@@ -188,7 +188,7 @@ By clicking "Launch App!" the app will then be launched from the simulated EHR.
 
 When the app has loaded it is possible to add a note in the text field, as well as selecting a period through the date-pickers. The form can be saved (to the FHIR-API) by using the "Lagre"-button.
 The information will then be available again when launching the app with the same patient at a later time.
-It is also possible to click send, which will send a request to the back-end, and in turn post the form on the Kafka queue.
+It is also possible to click send, which will send a request to the back-end, and in turn publish the form on the Kafka topic.
 A confirmation will pop-up when any of these two actions are successful.
 
  
