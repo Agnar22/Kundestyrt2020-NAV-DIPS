@@ -62,7 +62,7 @@ If you want to run Kafka locally, follow one of these guides:
  - Windows: [Video by Daily Code Buffer](https://www.youtube.com/watch?v=EUzH9khPYgs)
  - Ubuntu 18.04: [Tutorial by DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-install-apache-kafka-on-ubuntu-18-04)
 
-Then you will have to [remove these lines](https://github.com/Agnar22/Kundestyrt2020-NAV-DIPS/blob/master/backend/src/main/kotlin/com/ntnu/backend/config/Kafka.kt#L30-L34) and set the correct [bootstrap-server](https://github.com/Agnar22/Kundestyrt2020-NAV-DIPS/blob/master/backend/src/main/resources/application.properties#L6).
+Then you will have to [remove these lines](https://github.com/Agnar22/Kundestyrt2020-NAV-DIPS/blob/master/backend/src/main/kotlin/com/ntnu/backend/config/Kafka.kt#L38-L42) and set the correct [bootstrap-server](https://github.com/Agnar22/Kundestyrt2020-NAV-DIPS/blob/master/backend/src/main/resources/application.properties#L6).
 
 ## SMART on FHIR
 The SMART on FHIR client library allows you to build browser based apps - hereafter referred to as SMART apps - that can interact with FHIR REST APIs. 
