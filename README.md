@@ -58,7 +58,7 @@ To allow the Kafka producer & -consumer to connect to NAV's Kafka, we need to ha
  - You can test that everything is working by using the [testing endpoint](http://localhost:8081/testing). It should display "Published successfully".
  
 ### Run Kafka locally
-If you want to run Kafka locally, follow one one of these guides:
+If you want to run Kafka locally, follow one of these guides:
  - Windows: [Video by Daily Code Buffer](https://www.youtube.com/watch?v=EUzH9khPYgs)
  - Ubuntu 18.04: [Tutorial by DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-install-apache-kafka-on-ubuntu-18-04)
 
