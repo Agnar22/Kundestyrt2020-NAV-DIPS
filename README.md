@@ -11,8 +11,17 @@
  * [Code style](#code-style)
  
 ## Introduction
-This project is the work of group 9 in the class TDT4290 - Customer Driven Project at NTNU during the fall of 2020. The group was assigned NAV and DIPS as customers, who wanted to explore the possibilities and capabilities available through the use of the SMART on FHIR platform in developing a web-app.
-The main goal of this project was to create a SMART-app, as a proof of concept for digitizing the process for a specific type of application (attendance allowance) within NAVs systems.  
+This project is the work of group 9 in the class TDT4290 - Customer Driven Project at NTNU during the fall of 2020. The group was assigned [NAV](https://github.com/navikt) and [DIPS](https://github.com/DIPSAS) as customers, who wanted to explore the possibilities and capabilities available through the use of the [SMART on FHIR](https://docs.smarthealthit.org) platform in developing a web-app.
+The main goal of this project was to create a SMART-app, as a proof of concept for digitalizing the process of sending a specific type of medical certificate (attendance allowance), from a doctor using an EHR platform, to NAV's systems.
+
+## Project Structure
+The frontend folder contains source code for the client application. React is used to build the view, and implements the [SMART JS Client Library](http://docs.smarthealthit.org/client-js/) for SMART functionality: mainly authentication and FHIR resource access. 
+
+The backend folder contains the source code for a backend service using [Apache Kafka](https://kafka.apache.org). The backend also accesses the FHIR API to gather updated data about medical certificates, and sends this to a Kafka Topic.
+
+All files and their function:
+
+![Developmentview](documentation/Developmentview.PNG)
 
 ## Installation
 
@@ -208,7 +217,7 @@ Run image as container:
 The application is now available from the docker default ip on port 3001.
  
 ## Code style
-
+The frontend uses the [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) for React.
 If you want to run linter for the project:
 ```bash
 npm run lint
