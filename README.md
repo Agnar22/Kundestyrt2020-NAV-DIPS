@@ -21,7 +21,7 @@ The backend folder contains the source code for a backend service using [Apache 
 
 All files and their function:
 
-![Developmentview](documentation/Developmentview.PNG)
+![Developmentview](documentation/development_view.png)
 
 ## Installation
 
@@ -116,7 +116,7 @@ A _QuestionnaireResponse_ that is saved without being completed will have `statu
 ## Information flow
 The general flow of information after the SMART client has been authorized is depicted in the sequence diagram below. 
 
-![](images/Sequence_diagram.png)
+![](documentation/Sequence_diagram.png)
 
 When a doctor opens a document, a request is sent to the FHIR API for patient information and existing _QuestionnaireResponse_. If an in-progress _QuestionnaireResponse_ exists the fields in the applicaton is prefilled with this information. Else only the patient ssn and name is prefilled. 
 
