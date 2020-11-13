@@ -21,7 +21,7 @@ The backend folder contains the source code for a backend service using [Apache 
 
 All files and their function:
 
-![Developmentview](documentation/Developmentview.PNG)
+![Developmentview](documentation/development_view.png)
 
 ## Installation
 
