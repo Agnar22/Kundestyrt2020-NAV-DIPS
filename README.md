@@ -48,12 +48,19 @@ To allow the Kafka producer & -consumer to connect to NAV's Kafka, we need to ha
         - Open the project in Intellij with the backend folder as root folder.
         - Set the necessary environment variables for the keystore and truststore by:
             - double tap shift -> "Edit configurations..." -> "+" -> "Spring boot"
-                - Set "Main class" to: com.ntnu.BackendApplication
+                - Set "Main class" to: com.ntnu.backend.BackendApplication
                 - Set "Environment variables" to:
                 ```text
                 CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION>;CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD>;CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION>;CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>
                 ```
             - Accept changes by clicking "OK"
+        - Set SDK to a version java version 11.0.9 by:
+            - "File" -> "Project structure..." -> "Project" -> click the drop down menu under "Project SDK"
+               - Select an option with "java version 11.0.9"
+               - If you can't find that option, you will have to [download the correct SDK](https://www.jetbrains.com/help/idea/sdk.html#change-project-sdk)
+            - Click "Apply"
+            - Click "OK"
+            - Restart Intellij
         - Install dependencies: Right click on pom.xml -> "Maven" -> "Reload Project"
         - Run the application by pressing the green play button (Shift+F10).
     - <b>Command line:</b>
