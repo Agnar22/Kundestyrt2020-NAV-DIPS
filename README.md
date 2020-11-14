@@ -54,7 +54,7 @@ To allow the Kafka producer & -consumer to connect to NAV's Kafka, we need to ha
                 CLIENT_KEYSTORE_LOCATION=<KEYSTORE_LOCATION>;CLIENT_KEYSTORE_PASSWORD=<KEYSTORE_PASSWORD>;CLIENT_TRUSTSTORE_LOCATION=<TRUSTSTORE_LOCATION>;CLIENT_TRUSTSTORE_PASSWORD=<TRUSTSTORE_PASSWORD>
                 ```
             - Accept changes by clicking "OK"
-        - Set SDK to a version java version 11.0.9 by:
+        - Set SDK to a JDK with Java version 11.0.9 by:
             - "File" -> "Project structure..." -> "Project" -> click the drop down menu under "Project SDK"
                - Select an option with "java version 11.0.9"
                - If you can't find that option, you will have to [download the correct SDK](https://www.jetbrains.com/help/idea/sdk.html#change-project-sdk)
