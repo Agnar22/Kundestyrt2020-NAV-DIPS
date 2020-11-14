@@ -64,7 +64,6 @@ To allow the Kafka producer & -consumer to connect to NAV's Kafka, we need to ha
         - Install dependencies: Right click on pom.xml -> "Maven" -> "Reload Project"
         - Run the application by pressing the green play button (Shift+F10).
     - <b>Command line:</b>
-        - [Download the Kotlin compiler.](https://kotlinlang.org/docs/tutorials/command-line.html#downloading-the-compiler)
         - [Install Maven.](https://www.baeldung.com/install-maven-on-windows-linux-mac)
         - Navigate to the `\backend` folder
         - Run the application with:
