@@ -215,6 +215,8 @@ Run image as container:
 `docker run -it -v ${PWD}:/app -v /app/node_modules -p 3001:3000 -e CHOKIDAR_USEPOLLING=true frontend:dev`
 
 The application is now available from the docker default ip on port 3001.
+
+**NOTE:** When the frontend is run as a container launch.smarthealthit.org will reject it as it does not use https. This could be avioded by setting up certificates for https. 
  
 ## Code style
 The frontend uses the [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) for React.
